@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Cat Clicker</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+    <h1>Cat Clicker</h1>
+    <menu>
+        <ul></ul>
+    </menu>
+    <main class='cat'>
+        Cat name:
+        <div id='catName' class='stronger'></div>
+        Cat clicker clicks:
+        <div id='catClicks' class='stronger'></div>
+        <img id='catImg'>
+    </main>
+    <footer>
+        <button id='adminButton'>Admin</button>
+        <div id='adminArea' class='hideAdminArea'>
+            <form>
+                <label for='input_name'>Cat name:</label>
+                <input id='input_name' type='text' name='name'><br>
+                <label for='input_src'>URL:</label>
+                <input id='input_src' type='text' name='src'><br>
+                <label for='input_clicks'>Clicks:</label>
+                <input id='input_clicks' type='number' name='clicks'><br>
+                <button id='saveButton' type='button'>Save</button>
+                <button id='cancelButton' type='button'>Cancel</button>
+            </form>
+        </div>
+        <hr>
+        <div class="subtle font-small">
+            <p> ©
+                <span id="thisYear"></span> Hal Beresford. Learn more on
+                <a href="https://github.com/hbere/cat-clicker">GitHub</a>.</p>
+            <p><a href="/">Home</a> • <a href="/terms-of-use.html">Terms of Use</a> • <a href="/privacy-policy.html">Privacy
+                    Policy</a></p>
+        </div>
+    </footer>
+    <script src='./js/app.js'></script>
+</body>
+
+</html>

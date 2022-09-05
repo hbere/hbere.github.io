@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSX Share Buying Calculator (draft)</title>
+</head>
+<body>
+    <h1>How many shares of another HSX security can I buy?</h1>
+    <p>The Hollywood Stock Exchange (HSX) is a free, crowdsourced prediction market allowing participants to predict the U.S. box office success of a movie. But it can be tough to know exactly how many shares to sell, if you want to buy N shares of a new movie.</p>
+    <p>That is where this calculator comes in! Just use this calculator below to figure it out.</p>
+    <div>
+        How many shares do you want to buy? <input type="number" name="Buy Share Quantity" id="q2" min="0" placeholder="500">
+    </div>
+    <div>
+        ...at what price per share (H$)? <input type="number" name="Buy Share Price" id="p2" min="0" placeholder="17.50">
+    </div>
+    <div>
+        What is the price of the shares you want to sell (H$)? <input type="number" name="Sell Share Price" id="p1" min="0" placeholder="10.50">
+    </div>
+    <div>
+        <button onclick="numberShouldSell()">Calculate</button>
+    </div>
+    <p id="results"></p>
+    <script>
+        function numberShouldSell(p1 = document.getElementById("p1").value, p2 = document.getElementById("p2").value, q2 = document.getElementById("q2").value, fee = document.getElementById("fee").value) {
+            let q1 = (q2 * p2) / (p1 * (1 - fee) * (1-fee)) 
+            let s = Math.round(q1);
+            document.getElementById("results").innerHTML = "You should sell " + s + " shares.";
+        }
+        document.getElementById("p1").addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                numberShouldSell();
+            }
+        });
+        document.getElementById("p2").addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                numberShouldSell();
+            }
+        });
+        document.getElementById("q2").addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                numberShouldSell();
+            }
+        });
+    </script>
+    <div>
+        Transaction Fee (default 0.01 or 1%): <input type="number" name="Fee" id="fee" value="0.01" min="0" max="1">
+    </div>
+</body>
+</html>

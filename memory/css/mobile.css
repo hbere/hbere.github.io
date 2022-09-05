@@ -1,0 +1,19 @@
+/* Memory Game Project CSS file for small screens */
+
+button {
+  min-width: 48px;
+  min-height: 48px;
+}
+
+#buttonReset {
+  min-width: 48px;
+}
+
+.deck {
+  height: 280px;
+}
+
+.card {
+  height: 70px;
+  line-height: 70px;
+}

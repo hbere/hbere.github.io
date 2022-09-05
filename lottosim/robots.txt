@@ -1,0 +1,13 @@
+# Rule 1
+User-agent: *
+Disallow: /resources/
+
+# Rule 2
+User-agent: *
+Disallow: /cms/
+
+# Rule 3
+User-agent: *
+Disallow: /dev/
+
+Sitemap: https://lottosim.website/sitemap.xml

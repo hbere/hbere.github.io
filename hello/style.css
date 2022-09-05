@@ -1,0 +1,64 @@
+/* CSS */
+/* inspiration */
+/* view-source:https://interactive-examples.mdn.mozilla.net/css/codemirror-tabbed-5-50-2.css?v=f6294ac */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: lightgray;
+  font-family: sans-serif;
+}
+
+.zone {
+  width: 50%;
+  min-width: 30%;
+  margin-left: 5%;
+  margin-right: 5%;
+  min-height: 100px;
+}
+
+.btnZone {
+  width: 100%;
+  min-width: 30%;
+  margin-left: 5%;
+  margin-right: 5%;
+  height: auto;
+}
+
+.app {
+  display: flex;
+}
+
+h1 {
+  text-align: center;
+  font-size: larger;
+  font-weight: lighter;
+  color: #444444;
+}
+
+div {
+  font-size: larger;
+  font-weight: bold;
+}
+
+textarea {
+  width: 100%;
+  height: 100%;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+#showzone {
+  background-color: lightsteelblue;
+  border: 1px solid #666666;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+button {
+  min-width: 80px;
+  min-height: 80px;
+  color: #444444;
+}

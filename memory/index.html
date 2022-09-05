@@ -1,0 +1,93 @@
+<!-- Memory Game Project HTML file -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Memory Game Project</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type='image/x-icon' href="img/favicon.ico">
+    <link rel="stylesheet" type="text/css" media="screen" href="css/main.css" />
+    <link rel="stylesheet" type="text/css" media="screen and (max-width: 385px)" href="css/mobile.css" />
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h2>Memory Game
+                <button id="buttonReset">↻</button>
+            </h2>
+        </header>
+        <main>
+            <section class="rules">
+                <ul class="scoreboard">
+                    <li class="scoreHeader">Stars</li>
+                    <li class="scoreHeader">Moves</li>
+                    <li class="scoreHeader">Best</li>
+                    <li class="scoreHeader">Timer</li>
+                    <li class="scoreHeader">Best</li>
+                    <li class="score">
+                        <span id="stars" class="score">★★★</span>
+                    </li>
+                    <li class="score">
+                        <span id="moves" class="score">0</span>
+                    </li>
+                    <li class="score">
+                        <span id="movesBest" class="score">NA</span>
+                    </li>
+                    <li class="score">
+                        <span id="timer" class="score">0:00</span>
+                    </li>
+                    <li class="score">
+                        <span id="timerBest" class="score">NA</span>
+                    </li>
+                </ul>
+            </section>
+            <section class="congratulations displayNone">
+                <button id="buttonNewGame">You won!
+                    <span class="fontSizeSmaller">
+                        <br>Star rating:
+                        <span id="starsFinal">★★★</span>
+                        <br>Moves:
+                        <span id="movesFinal">0</span>
+                        <br>Time Elapsed:
+                        <span id="timerFinal">0:00</span>
+                    </span>
+                    <br>Click here to play again</button>
+            </section>
+            <ul class="deck">
+                <!-- TODO enable flipping cards by tabbing and hitting space bar -->
+                <li class="card">1</li>
+                <li class="card">1</li>
+                <li class="card">2</li>
+                <li class="card">2</li>
+                <li class="card">3</li>
+                <li class="card">3</li>
+                <li class="card">4</li>
+                <li class="card">4</li>
+                <li class="card">5</li>
+                <li class="card">5</li>
+                <li class="card">6</li>
+                <li class="card">6</li>
+                <li class="card">7</li>
+                <li class="card">7</li>
+                <li class="card">8</li>
+                <li class="card">8</li>
+            </ul>
+        </main>
+        <footer class="rules">
+            <div class="fontSizeSmaller score">
+                <p> ©
+                    <span id="thisYear"></span> Hal Beresford. Learn more on
+                    <a href="https://github.com/hbere/memory">GitHub</a>.
+                    <p><a href="/">Home</a> • <a href="/terms-of-use.html">Terms of Use</a> • <a href="/privacy-policy.html">Privacy Policy</a></p>
+                </p>
+            </div>
+        </footer>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,1 @@
+magick convert masters_thesis_small.png -transparent "#ffffff" masters_thesis_transparent_small.png

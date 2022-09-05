@@ -1,0 +1,165 @@
+/* Memory Game Project CSS file */
+body {
+  background: url("../img/background.png");
+}
+
+.container {
+  width: 500px;
+  max-width: 100%;
+  margin: auto;
+  border: dotted 0.5px black;
+  border-radius: 10px;
+  /* background-color: whitesmoke; */
+  background: linear-gradient(160deg, #e7ebff 0%, cornflowerblue 100%);
+  font-family: sans-serif;
+}
+
+.header {
+  text-align: center;
+  width: 100%;
+  color: #222;
+}
+
+.rules {
+  text-align: center;
+  width: 100%;
+}
+
+ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.scoreboard {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 100%;
+}
+
+.scoreHeader {
+  flex-grow: 1;
+  flex-basis: 20%;
+  color: #222;
+}
+
+.score {
+  flex-grow: 1;
+  flex-basis: 20%;
+  color: #333;
+}
+
+.deck {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  height: 320px;
+  max-width: 100%;
+  padding: 1%;
+}
+
+/* TODO remove aquamarine card hovering on win screen */
+
+.card {
+  /* display: inline-table; */
+  flex-grow: 1;
+  flex-basis: 20%;
+  height: 80px;
+  line-height: 80px;
+  margin: 1px;
+  border: dotted 1px gray;
+  background-color: #444;
+  text-align: center;
+  font-size: 3em;
+  border-radius: 10px;
+  /* TODO find more performant way to hide the text */
+  text-indent: -9999px;
+}
+
+.card:hover {
+  cursor: pointer;
+  background-color: aquamarine;
+}
+
+.clicked {
+  background-color: whitesmoke;
+  /* for showing the text */
+  text-indent: 0px;
+}
+
+.matched {
+  background-color: green;
+  /* for showing the text */
+  text-indent: 0px;
+}
+
+.matched:hover {
+  cursor: default;
+  background-color: green;
+}
+
+/* TODO add card flip animations */
+/* TODO add styles and animations for winning the game */
+
+/* The animation code */
+@keyframes gameWon {
+  from {
+    background-color: green;
+  }
+  to {
+    background-color: lightgreen;
+  }
+}
+
+.gameWon {
+  animation-name: gameWon;
+  animation-duration: 2s;
+  background-color: lightgreen;
+}
+
+.congratulations {
+  text-align: center;
+  width: 100%;
+  position: fixed;
+  top: 135px;
+  left: 0;
+  height: 0px;
+  z-index: 1;
+}
+
+.displayNone {
+  display: none;
+}
+
+button {
+  min-height: 30px;
+  cursor: pointer;
+  border-radius: 10px;
+  font-size: 1.5em;
+  font-family: serif;
+  font-style: italic;
+  padding: 8px;
+  background-color: lightsalmon;
+}
+
+button:hover {
+  background-color: salmon;
+}
+
+#buttonReset {
+  min-width: 30px;
+  background-color: transparent;
+  font-style: normal;
+  padding: 0px;
+  font-size: 1em;
+}
+
+#buttonReset:hover {
+  background-color: cornflowerblue;
+}
+
+.fontSizeSmaller {
+  font-size: 0.8em;
+}
