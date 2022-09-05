@@ -1,0 +1,3 @@
+magick convert simpleBlackjackLogo.png -transparent "#ffffff" simpleBlackjackLogo-transparent.png
+
+magick convert simpleBlackjackLogo.ico -transparent "#ffffff" simpleBlackjackLogo-transparent.ico

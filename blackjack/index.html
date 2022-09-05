@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Simple Blackjack</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="css/main.css" />
+    <link rel="stylesheet" type="text/css" media="screen and (max-width: 415px)" href="css/mobile.css" />
+    <link rel="shortcut icon" type='image/x-icon' href="img/simpleBlackjackLogo-transparent.ico">
+</head>
+
+<body>
+    <div class="container">
+
+        <header>
+            <h2>Simple Blackjack</h2>
+        </header>
+
+        <main>
+            <div class="player">
+                <div class="subtle font-small">
+                    <p>You have
+                        <span id="playerPoints" class="strong pre-wrap"></span>
+                        <strong> points</strong>.</p>
+                </div>
+                <div id="playerHand" class="pre-wrap font-large"></div>
+            </div>
+            <div class="controls">
+                <button id="hit">Hit
+                    <span class="font-small displayNoneOnMobile"> [1]</span>
+                </button>
+                <!-- <button id="split">Split<span class="font-small displayNoneOnMobile"></span></button> -->
+                <button id="stand">Stand
+                    <span class="font-small displayNoneOnMobile"> [2]</span>
+                </button>
+                <button id="newGame">Next Game
+                    <span class="font-small displayNoneOnMobile"> [3]</span>
+                </button>
+            </div>
+            <div class="house">
+                <div id="houseHand" class="pre-wrap font-large"></div>
+                <div class="subtle font-small">
+                    <p>The house stands at 17 and shows
+                        <span id="housePoints" class="strong pre-wrap"></span>
+                        <strong> points</strong>.</p>
+                </div>
+            </div>
+            <div class="scoreboard">
+                <h3 id="result" class="pre-wrap">
+                    <h3>
+            </div>
+            <div class="scoreboard">
+                <h2>Won-Lost-Pushed</h2>
+                <span id="scoreboard" class="subtle font-small strong pre-wrap"></span>
+            </div>
+
+            <div class="subtle font-small">
+                <p> ©
+                    <span id="thisYear"></span> Hal Beresford. Learn more on
+                    <a href="https://github.com/hbere/blackjack">GitHub</a>.</p>
+                    <p><a href="/">Home</a> • <a href="/terms-of-use.html">Terms of Use</a> • <a href="/privacy-policy.html">Privacy Policy</a></p>            
+            </div>
+        </main>
+
+    </div>
+    <!-- Load JavaScript -->
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
