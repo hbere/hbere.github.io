@@ -1,0 +1,261 @@
+/* ArtMind CSS */
+
+* {
+  /* https://www.w3schools.com/Css/css_rwd_grid.asp */
+  box-sizing: border-box;
+}
+
+body {
+  text-align: center;
+  background-color: #fff;
+  font-family: "Lato", sans-serif;
+  width: 650px;
+  margin: 0 auto;
+}
+
+h1 {
+  color: darkblue;
+  margin: 15px;
+}
+
+h3,
+#votes {
+  color: #222;
+}
+
+/* .signedOut {
+  display: visible;
+}
+
+.signedIn {
+  display: none;
+}
+
+.results {
+  display: none;
+} */
+
+.artwork {
+  /* vertical-align: middle; */
+  height: 350px;
+}
+
+.artwork2 {
+  /* vertical-align: middle; */
+  height: auto;
+  max-height: 500px;
+  max-width: 100%;
+  /* padding: 1px; */
+}
+
+/* https://stackoverflow.com/questions/3029422/how-do-i-auto-resize-an-image-to-fit-a-div-container */
+#artwork {
+  align-content: center;
+  vertical-align: middle;
+  /* display: inline-flex; */
+  /* display: flex; */
+  align-items: center;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* https://stackoverflow.com/questions/7273338/how-to-vertically-align-an-image-inside-a-div#7310398 */
+/* .middleize {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+} */
+
+/* https://stackoverflow.com/questions/3029422/how-do-i-auto-resize-an-image-to-fit-a-div-container */
+.artwork_recommended {
+  align-content: center;
+  vertical-align: middle;
+  display: inline-flex;
+  align-items: center;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 300px;
+}
+
+.artwork_recommended_title {
+  align-content: center;
+  /* vertical-align: middle; */
+  display: block;
+  align-items: center;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100px;
+  font-weight: bold;
+  font-size: 1.05em;
+}
+
+.artworkCaption {
+  width: auto;
+  height: auto;
+  display: inline-block;
+  max-width: 100%;
+  max-height: 200px;
+  font-size: 0.85em;
+}
+
+#homepageImage {
+  width: 300px;
+}
+
+.ht46 {
+  height: 46px;
+}
+
+.voteButton {
+  background-color: transparent;
+  height: 86px;
+  width: 86px;
+  outline: 0px solid black;
+}
+
+.voteButton:hover {
+  outline: 2px solid black;
+}
+
+/* .voteButtonChosen {
+  outline: 4px solid blue;
+} */
+
+.loginoutButton,
+.getStartedButton,
+.backButton,
+.loginAnonymouslyButton {
+  background-color: darkblue;
+  font-size: 1.1em;
+}
+
+.loginoutButton:hover,
+.getStartedButton:hover,
+.backButton:hover,
+.loginAnonymouslyButton:hover {
+  background-color: #1F75FE;
+  /* background-color: #3c75f6; */
+}
+
+button {
+  font-size: 1em;
+  color: white;
+  margin: 0px;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+.galleryRecommendationsButton {
+  /* background-color: #FF8C00; */
+  background-color: darkblue;
+  font-size: 0.85em;
+}
+
+.galleryRecommendationsButton:hover {
+  /* background-color: #FFA500; */
+  background-color: #1F75FE;
+}
+
+.discoverMoreButton {
+  background-color: #989898;
+  font-size: 0.85em;
+}
+
+.discoverMoreButton:hover {
+  background-color: #A9A9A9;
+}
+
+#ratedWorksListButton {
+  background-color: #bf5700;
+}
+
+.loginoutButton {
+  float: right;
+}
+
+footer {
+  font-size: 10px;
+  color: #222;
+}
+
+#loginState {
+  text-align: right;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+.navcol1 {
+  text-align: left;
+  width: 70%;
+  height: 50px;
+  float: left;
+  padding: 0 20px;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  border-color: gray;
+  border-bottom-style: solid;
+  border-width: thin;
+}
+
+.navcol2 {
+  text-align: right;
+  width: 30%;
+  height: 50px;
+  float: left;
+  padding: 0 20px;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  border-color: gray;
+  border-bottom-style: solid;
+  border-width: thin;
+}
+
+.footer {
+  border-color: gray;
+  border-top-style: solid;
+  border-bottom-style: none;
+  border-width: thin;
+}
+
+#getStartedButton {
+  text-align: center;
+  display: inline-block;
+}
+
+#loginButton, #logoutButton {
+  display: none;
+}
+
+@media only screen and (max-width: 650px) {
+  /* For mobile phones: */
+  body {
+    width: 98%;
+    max-width: 98%;
+  }
+  .artwork {
+    height: 300px;
+    /* height: auto; */
+    width: 100%;
+  }
+  .artwork_recommended {
+    max-width: 100%;
+  }
+  .voteButton {
+    outline: 0px solid white;
+  }
+  .voteButton:hover {
+    outline: 0px solid white;
+  }
+  /* button {
+    font-size: 1.5em;
+  } */
+  /* button {
+    font-size: 30px;
+  } */
+}
