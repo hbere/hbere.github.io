@@ -1,2 +1,1 @@
-# Hobby Projects
-This repository contains/shows my hobby projects.
+Source for halberesford.com — personal one-pager. Self-contained: no build step, no dependencies.

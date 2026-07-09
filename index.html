@@ -1,166 +1,384 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="shortcut icon" type='image/x-icon' href="./img/pubIcon.png">
-  <title>Hobby Projects</title>
-  <link rel="stylesheet" href="./css/master.css">
-  <link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hal Beresford — Forecasting systems</title>
+<meta name="description" content="I build and run an automated forecasting system that trades prediction markets — end to end, solo." />
+<link rel="canonical" href="https://halberesford.com/" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Hal Beresford — Forecasting systems" />
+<meta property="og:description" content="I build and run an automated forecasting system that trades prediction markets — end to end, solo." />
+<meta property="og:url" content="https://halberesford.com/" />
+<meta property="og:site_name" content="Hal Beresford" />
+<meta property="og:image" content="https://halberesford.com/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="There's a class of question with a real answer we just don't know yet — Hal Beresford, forecasting systems. With an illustrative calibration curve." />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Hal Beresford — Forecasting systems" />
+<meta name="twitter:description" content="I build and run an automated forecasting system that trades prediction markets — end to end, solo." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c5a5f'/%3E%3Cpath d='M7 25 L25 7' stroke='%23e7ece9' stroke-width='2' stroke-dasharray='2.5 3' fill='none'/%3E%3Ccircle cx='20' cy='11' r='3.6' fill='%23e7ece9'/%3E%3C/svg%3E" />
+<style>
+  :root {
+    --paper:      #f4f6f5;
+    --paper-2:    #eef1f0;
+    --ink:        #16201f;
+    --ink-soft:   #55635f;
+    --line:       #d4dbd8;
+    --accent:     #0c5a5f;
+    --accent-2:   #0a4b50;
+    --font-serif: "Iowan Old Style", "Palatino Linotype", Cambria, Georgia, "Times New Roman", serif;
+    --font-sans:  system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-mono:  ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    --measure:    38rem;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper:    #0e1413;
+      --paper-2:  #141c1b;
+      --ink:      #e7ece9;
+      --ink-soft: #90a09b;
+      --line:     #233230;
+      --accent:   #34aeb2;
+      --accent-2: #47c2c6;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .wrap {
+    max-width: var(--measure);
+    margin: 0 auto;
+    padding: clamp(2.5rem, 8vw, 6rem) 1.5rem clamp(3rem, 6vw, 5rem);
+  }
+
+  /* ── shared type ─────────────────────────────────────────────── */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 1.4rem;
+  }
+  h1 {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: clamp(2rem, 5.4vw, 3.15rem);
+    line-height: 1.08;
+    letter-spacing: -0.012em;
+    text-wrap: balance;
+    margin: 0 0 1.6rem;
+  }
+  h1 em { font-style: italic; color: var(--accent); }
+  p { margin: 0 0 1.15rem; }
+  .lede { font-size: 1.16rem; color: var(--ink); }
+  .soft { color: var(--ink-soft); }
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+  .rule { height: 1px; background: var(--line); border: 0; margin: clamp(2.5rem, 6vw, 3.75rem) 0; }
+
+  section > .label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 1.1rem;
+  }
+
+  /* ── calibration motif ───────────────────────────────────────── */
+  .calib {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 1.75rem 1rem 1.5rem;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+  }
+  .calib canvas { width: 100%; max-width: 340px; height: auto; display: block; }
+  .calib figcaption {
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+    text-align: center;
+    max-width: 30rem;
+    margin: 0;
+  }
+  .calib figcaption b { color: var(--ink); font-weight: 600; }
+  .calib .n { font-family: var(--font-mono); color: var(--accent); font-style: normal; }
+
+  /* ── pipeline ────────────────────────────────────────────────── */
+  .flow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  .step .k {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 0.55rem;
+  }
+  .step .k::before { content: ""; width: 0.5rem; height: 0.5rem; background: var(--accent); border-radius: 50%; flex: none; }
+  .step p { font-size: 0.96rem; margin: 0; color: var(--ink-soft); }
+  .step p b { color: var(--ink); font-weight: 600; }
+  @media (max-width: 34rem) { .flow { grid-template-columns: 1fr; gap: 1.35rem; } }
+
+  /* ── repo callout ────────────────────────────────────────────── */
+  .repo {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent);
+    border-radius: 3px;
+    padding: 1.4rem 1.5rem;
+  }
+  .repo .code { font-family: var(--font-mono); font-size: 0.95rem; color: var(--ink); font-weight: 600; }
+  .repo p { margin: 0.55rem 0 1rem; color: var(--ink-soft); font-size: 0.98rem; }
+  .repo a.cta {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-family: var(--font-mono); font-size: 0.85rem; letter-spacing: 0.03em;
+    text-decoration: none; color: var(--accent); font-weight: 600;
+  }
+  .repo a.cta:hover { color: var(--accent-2); }
+  .repo a.cta .arrow { transition: transform 0.18s ease; }
+  .repo a.cta:hover .arrow { transform: translateX(3px); }
+
+  /* ── contact / footer ────────────────────────────────────────── */
+  .contact { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; font-family: var(--font-mono); font-size: 0.9rem; }
+  .contact a { text-decoration: none; }
+  .contact a:hover { text-decoration: underline; }
+  footer { margin-top: clamp(2.5rem, 6vw, 3.75rem); font-size: 0.8rem; color: var(--ink-soft); }
+
+  /* ── entrance motion ─────────────────────────────────────────── */
+  .rise { opacity: 0; transform: translateY(14px); animation: rise 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) forwards; }
+  .rise:nth-child(2) { animation-delay: 0.06s; }
+  .d1 { animation-delay: 0.10s; } .d2 { animation-delay: 0.18s; } .d3 { animation-delay: 0.26s; }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .rise { animation: none; opacity: 1; transform: none; }
+    a, .repo a.cta .arrow { transition: none; }
+  }
+</style>
 </head>
-
 <body>
-  <div>
-    <header>
-      <div class="col-12 header-text">
-        <h1>Hobby Projects</h1>
-        <div class="subtle subtitle-top">
-          <p>By 
-            <a href="https://www.halberesford.com/">Hal Beresford</a>
-          </p>
-          <p>
-            <a href="https://github.com/hbere"><img class="portfolio-tile" src="./img/GitHub-Mark-32px.png" alt="GitHub logo"></a>
-          </p>
+  <main class="wrap">
+    <p class="eyebrow rise">Hal Beresford · Forecasting systems</p>
+
+    <h1 class="rise">There's a class of question with a real answer we just don't know <em>yet.</em></h1>
+
+    <p class="lede rise d1">Will some measurable event happen, and by when? Prediction markets let people
+    trade on those questions, and the prices act like a crowd's best guess at the odds.</p>
+
+    <p class="rise d2">For the past several months I've been building a system that competes in those
+    markets — on <a href="https://kalshi.com">Kalshi</a>, a regulated exchange for event contracts. It gathers
+    public data across a range of domains, turns it into calibrated probabilities, and, where its estimate
+    disagrees with the market's price, places a trade. Then it settles up, scores how it did, and learns
+    from the record.</p>
+
+    <p class="rise d3">It runs by itself: about <b>thirty forecasting pipelines</b> operating unattended on a
+    single server, all day, alerting me only when something breaks. Building it touched everything — data
+    engineering, statistical modelling, live financial execution, and the unglamorous reliability work that
+    keeps an automated system from quietly going wrong.</p>
+
+    <hr class="rule" />
+
+    <section>
+      <figure class="calib" aria-labelledby="calib-cap">
+        <canvas width="680" height="520" role="img"
+          aria-label="An illustrative calibration curve: predicted probabilities plotted against how often events actually happened, hugging the diagonal line of perfect calibration."></canvas>
+        <figcaption id="calib-cap">
+          <b>Honest scorekeeping.</b> When the system says <span class="n">70%</span>, the event should
+          happen about <span class="n">70%</span> of the time. Making the evaluation trustworthy is half
+          the work. <em>(Chart illustrative — the real scorecards stay private.)</em>
+        </figcaption>
+      </figure>
+    </section>
+
+    <hr class="rule" />
+
+    <section>
+      <h2 class="label">What it involves</h2>
+      <div class="flow">
+        <div class="step">
+          <p class="k">Gather</p>
+          <p>Public data from many sources, cleaned and made <b>point-in-time honest</b> so a backtest can't peek at the future.</p>
+        </div>
+        <div class="step">
+          <p class="k">Forecast</p>
+          <p>Probabilistic models, <b>calibrated</b> and scored against real outcomes rather than trusted on faith.</p>
+        </div>
+        <div class="step">
+          <p class="k">Execute</p>
+          <p>Live orders placed and reconciled automatically, <b>built to fail safely</b> when something goes wrong.</p>
         </div>
       </div>
-    </header>
+    </section>
 
-    <main>
-      <!-- Web & Data Projects -->
-      <div class="col-12">
+    <hr class="rule" />
 
-        <div class="col-4 header-text">
-          <a href="/blackjack/">
-            <img class="portfolio-tile" src="./img/simpleBlackjackLogo-transparent.png" alt="Simple Blackjack web application icon">
-            <p>Blackjack</p>
-          </a>
-          <div class="subtle subtitle-top">
-            <a href="https://github.com/hbere/blackjack">GitHub</a>
-            <p>June 2018</p>
-          </div>
-        </div>
-
-        <div class="col-4 header-text">
-          <a href="/memory/">
-            <img class="portfolio-tile" src="./img/memory-game.png" alt="Memory Game web application icon">
-            <p>Memory Game</p>
-          </a>
-          <div class="subtle subtitle-top">
-            <a href="https://github.com/hbere/memory">GitHub</a>
-            <p>July 2018</p>
-          </div>
-        </div>
-
-        <div class="col-4 text-center">
-          <a href="/lottosim/">
-            <img class="portfolio-tile" src="./img/lottosim v2.png" alt="Lottery Simulator web application icon">
-            <p>LottoSim</p>
-          </a>
-          <div class="subtle subtitle-top">
-            <a href="https://github.com/hbere/lottosim">GitHub</a>
-            <p>April 2018</p>
-          </div>
-        </div>
-
-        <div class="col-4 header-text">
-          <a href="https://my-reads-test.herokuapp.com/">
-            <img class="portfolio-tile" src="./img/my-reads-test.png" alt="Simple bookshelf application">
-            <p>My Reads</p>
-          </a>
-          <div class="subtle subtitle-top">
-            <a href="https://github.com/hbere/my-reads">GitHub</a>
-            <p>November 2018</p>
-          </div>
-        </div>
-
-        <div class="col-4 header-text">
-          <a href="/cat-clicker/">
-            <img class="portfolio-tile" src="./img/cat1_small_transparent.png" alt="Simple cat clicker game">
-            <p>Cat Clicker</p>
-          </a>
-          <div class="subtle subtitle-top">
-            <a href="https://github.com/hbere/cat-clicker">GitHub</a>
-            <p>October 2018</p>
-          </div>
-        </div>
-
-        <div class="col-4 header-text">
-          <a href="/arcade/">
-            <img class="portfolio-tile" src="./img/arcade.png" alt="Simple arcade game">
-            <p>Arcade</p>
-          </a>
-          <div class="subtle subtitle-top">
-            <a href="https://github.com/hbere/frontend-nanodegree-arcade-game">GitHub</a>
-            <p>October 2018</p>
-          </div>
-        </div>
-
-        <div class="col-4 header-text">
-          <a href="/school-attendance/">
-            <img class="portfolio-tile" src="./img/attendance.png" alt="Simple school attendance table">
-            <p>Attendance</p>
-          </a>
-          <div class="subtle subtitle-top">
-            <a href="https://github.com/hbere/ud989-school-attendance">GitHub</a>
-            <p>October 2018</p>
-          </div>
-        </div>
-
-        <div class="col-4 text-center">
-          <a href="/hello/">
-            <img class="portfolio-tile" src="./img/hello_tile.png" alt="Hello web application icon">
-            <p>Hello HTML</p>
-          </a>
-          <div class="subtle subtitle-top">
-            <p></p>
-            <p></p>
-          </div>
-        </div>
-
+    <section>
+      <h2 class="label">Open source</h2>
+      <div class="repo">
+        <span class="code">kalshi-transport</span>
+        <p>The forecasting itself stays private — but I've open-sourced the engineering underneath it: the
+        exchange client that handles authentication, correct fee math, and crash-safe order submission. A
+        clean, well-tested sample of how I build production systems.</p>
+        <a class="cta" href="https://github.com/hbere/kalshi-transport">View on GitHub <span class="arrow">&rarr;</span></a>
       </div>
+    </section>
 
-      <!-- Web & Data Projects -->
-      <div class="col-12">
+    <hr class="rule" />
 
-        <h2 class="header-text">Out of Order</h2>
-
-        <div class="col-4 header-text">
-          <a href="https://neighborhoods-test.herokuapp.com/">
-            <img class="portfolio-tile" src="./img/neighborhoods-test-transparent.png" alt="Philadelphia map with landmarks">
-            <p>Philadelphia Places</p>
-          </a>
-          <div class="subtle subtitle-top">
-            <a href="https://github.com/hbere/neighborhoods">GitHub</a>
-            <p>November 2018</p>
-            <em>out of order due to API expiration</em>
-          </div>
-        </div>
-
-        <div class="col-4 text-center">
-          <a href="/artmind/">
-            <img class="portfolio-tile" src="./img/artmind_icon.png" alt="ArtMIND web application icon">
-            <p>ArtMIND</p>
-          </a>
-          <div class="subtle subtitle-top">
-            <a href="https://github.com/hbere/art-mind">GitHub</a>
-            <p>May 2018</p>
-            <em>out of order due to API expiration</em>
-          </div>
-        </div>
-
+    <section>
+      <h2 class="label">Get in touch</h2>
+      <p class="soft" style="margin-bottom:1rem;font-size:0.98rem;">
+        Looking for data science, product, or founding-team roles — anywhere the job is turning messy
+        real-world data into decisions. Happy to walk you through the whole system.
+      </p>
+      <div class="contact">
+        <a href="https://www.linkedin.com/in/halberesford">linkedin.com/in/halberesford</a>
+        <a href="https://github.com/hbere">github.com/hbere</a>
       </div>
+    </section>
 
-    </main>
+    <footer>Built and operated solo. Not affiliated with or endorsed by Kalshi.</footer>
+  </main>
 
-    <footer>
-      <div class="subtle subtitle-top text-center">
-        <p>© 2021 Hal Beresford</p>
-        <p><a href="/">Home</a> • <a href="/terms-of-use.html">Terms of Use</a> • <a href="/privacy-policy.html">Privacy
-            Policy</a></p>
-      </div>
-    </footer>
-  </div>
+<script>
+(function () {
+  var canvas = document.querySelector(".calib canvas");
+  if (!canvas || !canvas.getContext) return;
+  var ctx = canvas.getContext("2d");
+
+  // Predicted probability (x) vs. observed frequency (y), hugging the diagonal.
+  var pts = [
+    [0.05, 0.04], [0.17, 0.20], [0.31, 0.28], [0.49, 0.53],
+    [0.62, 0.59], [0.77, 0.80], [0.90, 0.87], [0.97, 0.96]
+  ];
+
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function color(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  function draw(progress) {
+    var cssW = canvas.clientWidth || 340;
+    var cssH = cssW * (canvas.height / canvas.width);
+    var dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    var ink = color("--ink"), soft = color("--ink-soft"),
+        accent = color("--accent"), line = color("--line");
+
+    var padL = 30, padR = 14, padT = 12, padB = 26;
+    var w = cssW - padL - padR, h = cssH - padT - padB;
+    var X = function (v) { return padL + v * w; };
+    var Y = function (v) { return padT + (1 - v) * h; };
+
+    ctx.clearRect(0, 0, cssW, cssH);
+
+    // frame
+    ctx.strokeStyle = line; ctx.lineWidth = 1;
+    ctx.strokeRect(padL, padT, w, h);
+
+    // perfect-calibration reference (dashed diagonal)
+    ctx.save();
+    ctx.setLineDash([4, 4]); ctx.strokeStyle = soft; ctx.globalAlpha = 0.7;
+    ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(1), Y(1)); ctx.stroke();
+    ctx.restore();
+
+    // connecting line through the points, revealed by progress
+    var n = pts.length, shown = reduce ? n : progress * n;
+    ctx.strokeStyle = accent; ctx.lineWidth = 1.75; ctx.globalAlpha = 0.55;
+    ctx.beginPath();
+    for (var i = 0; i < n; i++) {
+      if (i > shown) break;
+      var px = X(pts[i][0]), py = Y(pts[i][1]);
+      i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+
+    // points
+    for (var j = 0; j < n; j++) {
+      var reveal = reduce ? 1 : Math.max(0, Math.min(1, shown - j));
+      if (reveal <= 0) continue;
+      var last = j === n - 1;
+      ctx.fillStyle = accent;
+      ctx.globalAlpha = reveal;
+      ctx.beginPath();
+      ctx.arc(X(pts[j][0]), Y(pts[j][1]), last ? 5 : 3.4, 0, Math.PI * 2);
+      ctx.fill();
+      if (last) { ctx.strokeStyle = color("--paper"); ctx.lineWidth = 1.5; ctx.stroke(); }
+    }
+    ctx.globalAlpha = 1;
+
+    // axis labels
+    ctx.fillStyle = soft;
+    ctx.font = '10px ui-monospace, Menlo, Consolas, monospace';
+    ctx.textAlign = "center";
+    ctx.fillText("predicted", padL + w / 2, cssH - 6);
+    ctx.save();
+    ctx.translate(9, padT + h / 2); ctx.rotate(-Math.PI / 2);
+    ctx.fillText("actual", 0, 0);
+    ctx.restore();
+  }
+
+  function animate() {
+    if (reduce) { draw(1); return; }
+    var start = null, dur = 1100;
+    function frame(t) {
+      if (start === null) start = t;
+      var p = Math.min(1, (t - start) / dur);
+      var eased = 1 - Math.pow(1 - p, 3);
+      draw(eased);
+      if (p < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  var ran = false;
+  function maybeRun() {
+    if (ran) return; ran = true; animate();
+  }
+
+  // Draw when scrolled into view (or immediately if already visible).
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { maybeRun(); io.disconnect(); } });
+    }, { threshold: 0.35 });
+    io.observe(canvas);
+  } else {
+    maybeRun();
+  }
+
+  // Redraw on resize and on light/dark change so it always matches the theme.
+  var rt;
+  window.addEventListener("resize", function () {
+    clearTimeout(rt); rt = setTimeout(function () { draw(1); }, 120);
+  });
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () { draw(1); });
+})();
+</script>
 </body>
-
 </html>
