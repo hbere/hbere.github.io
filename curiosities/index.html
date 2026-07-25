@@ -4,11 +4,11 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>A Cabinet of Curiosities — Hal Beresford</title>
-<meta name="description" content="A small catalogue of curiosities from forecasting work: the dimension ladder from a point to a six-dimensional cube, why compounding ignores the size of your fortune, and the weather sensor that lied for exactly one minute." />
+<meta name="description" content="A small catalogue of curiosities from forecasting work: the dimension ladder from a point to a six-dimensional cube, why compounding ignores the size of your fortune, and the morning a Denver thermometer reported 24.8°F in June." />
 <link rel="canonical" href="https://halberesford.com/curiosities/" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="A Cabinet of Curiosities — Hal Beresford" />
-<meta property="og:description" content="Specimens from forecasting work: hypercubes, compounding, and a thermometer that lied for one minute." />
+<meta property="og:description" content="Specimens from forecasting work: hypercubes, compounding, and the two minutes Denver spent in winter." />
 <meta property="og:url" content="https://halberesford.com/curiosities/" />
 <meta property="og:site_name" content="Hal Beresford" />
 <meta property="og:image" content="https://halberesford.com/curiosities/og.png" />
@@ -17,8 +17,10 @@
 <meta property="og:image:alt" content="A Cabinet of Curiosities — Hal Beresford. A wireframe tesseract above the title, with the line: hypercubes, compounding, instruments that lie." />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="A Cabinet of Curiosities — Hal Beresford" />
-<meta name="twitter:description" content="Specimens from forecasting work: hypercubes, compounding, and a thermometer that lied for one minute." />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c5a5f'/%3E%3Cpath d='M7 25 L25 7' stroke='%23e7ece9' stroke-width='2' stroke-dasharray='2.5 3' fill='none'/%3E%3Ccircle cx='20' cy='11' r='3.6' fill='%23e7ece9'/%3E%3C/svg%3E" />
+<meta name="twitter:description" content="Specimens from forecasting work: hypercubes, compounding, and the two minutes Denver spent in winter." />
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <style>
   :root {
     --paper:      #f4f6f5;
@@ -311,31 +313,54 @@
 
     <!-- ══════════════ EXHIBIT 003 ══════════════ -->
     <article class="exhibit" id="exh-003">
-      <p class="acc">Exh. 003 · Instruments · July 2026</p>
-      <h2>The Thermometer That Lied for One Minute</h2>
+      <p class="acc">Exh. 003 · Instruments · Denver, 26 June 2026</p>
+      <h2>The Two Minutes Denver Spent in Winter</h2>
 
-      <p>Automated weather stations are honest machines that occasionally tell
-      spectacular lies. A bird settles on the aspirator, a vehicle idles upwind, a
-      voltage flickers — and a station that has been reporting a mild afternoon
-      abruptly announces a temperature from another climate, for exactly one reading,
-      then carries on as though nothing had happened.</p>
+      <p>At 9:33 on a June morning, the weather station at Denver International
+      Airport was reporting 77°F and climbing toward what would become a 90°F
+      afternoon. At 9:34 it stopped reporting anything at all. For the next twenty
+      minutes every field it publishes — temperature, wind speed, wind direction —
+      came across as <code>-999</code>, the sentinel value instruments use to say
+      <em>I have nothing for you</em>.</p>
+
+      <p>Then it came back, and for two minutes it insisted the air was 24.8°F.</p>
 
       <figure id="fig-glitch">
-        <svg id="glitch-svg" viewBox="0 0 760 320" role="img"
-          aria-label="A day of temperature readings following a smooth daily curve, interrupted by a single reading that spikes far above the surrounding values."></svg>
+        <svg id="glitch-svg" viewBox="0 0 760 340" role="img"
+          aria-label="Every one-minute temperature reading from Denver International Airport on 26 June 2026. The curve rises from 55 degrees at dawn to 90 in the afternoon, broken by a twenty-minute gap at 9:34am, immediately after which two readings register 24.8 degrees before the curve resumes."></svg>
         <div class="tooltip" id="glitch-tip"></div>
-        <figcaption>Fig. 3 — An <b>illustrative</b> reconstruction of a single-interval
-        sensor excursion, not a real station record. The lie lasts one reading. The
-        paperwork can last considerably longer.</figcaption>
+        <figcaption id="glitch-cap">Fig. 3 — Every one-minute reading Denver
+        International transmitted that day, as recorded off the wire. The line breaks
+        where the station went silent; it is not drawn across the gap, because nothing
+        was measured there.</figcaption>
+        <details class="datatable">
+          <summary>the readings either side of the gap</summary>
+          <table id="glitch-table">
+            <thead><tr><th scope="col">local time</th><th scope="col">reported</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </details>
       </figure>
 
-      <p>These excursions are catalogable — they have characteristic shapes, favourite
-      hours and favourite failure modes — and they matter well beyond meteorology,
-      because everything downstream is bound to <em>what the instrument said</em>
-      rather than to what the air did. Climate records, insurance triggers and
-      settlement systems all inherit the reading. A one-minute lie can become a
-      permanent fact, and the process for correcting it (where one exists) is its own
-      curiosity, for a later exhibit.</p>
+      <p>24.8°F is exactly −4°C, a suspiciously round number in the units the sensor
+      actually works in. It is also 52°F below the air on either side of it, and it
+      arrived while Denver was having an ordinary warm morning. Two readings later the
+      station was back at 77°F as though nothing had happened.</p>
+
+      <p>What makes this more than a shaggy-dog story is that the lie was
+      <em>plausibly formatted</em>. A <code>-999</code> is easy to discard — no
+      thermometer means that. But 24.8°F is a real temperature, correctly encoded,
+      inside every range check a naive filter would apply. It is January's reading
+      delivered in June. Catching it takes a rule with a sense of context: compare each
+      reading against its neighbours and reject what disagrees with them violently,
+      rather than merely checking whether a number is physically possible.</p>
+
+      <p>The official record was never fooled — Denver's daily summary for the 26th
+      kept its low at 56°F and the bad readings were quality-controlled out. But that
+      correction happens hours later, and in the meantime the wrong number is what
+      exists. Climate archives, insurance triggers and settlement systems are all bound
+      to <em>what the instrument said</em> rather than to what the air did, and they do
+      not all wait for the correction. A two-minute lie can outlive the two minutes.</p>
     </article>
 
     <hr class="rule" />
@@ -663,54 +688,90 @@
     svg.addEventListener("pointerleave", hideTip);
   })();
 
-  /* ════════ Exh. 003 — the excursion ════════ */
+  /* ════════ Exh. 003 — the KDEN excursion (real data) ════════ */
   (function () {
     var svg = document.getElementById("glitch-svg");
     if (!svg) return;
     var tip = document.getElementById("glitch-tip");
     var fig = document.getElementById("fig-glitch");
 
-    var W = 760, H = 320, ML = 52, MR = 20, MT = 16, MB = 34;
-    var STEP = 5, N = 288, SPIKE = 169;
-    var temps = [], i;
-    for (i = 0; i < N; i++) {
-      var m = i * STEP;
-      var base = 65 + 11 * Math.cos(2 * Math.PI * (m - 960) / 1440);
-      base += 1.1 * Math.sin(m / 97) + 0.7 * Math.sin(m / 41 + 2);
-      temps.push(i === SPIKE ? 106.2 : base);
-    }
-    var TMIN = 50, TMAX = 110;
-    function xPos(i) { return ML + (i / (N - 1)) * (W - ML - MR); }
-    function yPos(v) { return MT + (1 - (v - TMIN) / (TMAX - TMIN)) * (H - MT - MB); }
-    function hhmm(i) {
-      var m = i * STEP, h = Math.floor(m / 60), mm = m % 60;
-      return (h < 10 ? "0" : "") + h + ":" + (mm < 10 ? "0" : "") + mm;
+    /* Every 1-minute reading Denver International transmitted on 2026-06-26,
+       local time, as recorded off the wire: [minute-of-day, tenths of °F].
+       The station's -999 "no data" sentinels are omitted rather than plotted,
+       so a silent stretch is a GAP in the line, never a value. */
+    var OBS = [[0,554],[1,554],[2,554],[3,554],[4,554],[5,554],[6,554],[7,554],[8,554],[9,554],[10,554],[11,554],[12,554],[13,554],[14,554],[15,554],[16,554],[17,554],[18,554],[19,554],[20,554],[21,554],[22,554],[23,554],[24,554],[25,554],[26,554],[27,554],[28,554],[29,554],[30,554],[31,572],[32,572],[33,572],[34,572],[35,572],[36,572],[37,572],[38,572],[39,572],[40,572],[41,572],[42,572],[43,572],[44,572],[45,572],[46,572],[47,572],[48,572],[49,554],[50,554],[51,554],[52,554],[53,559],[55,554],[56,554],[57,554],[60,572],[61,572],[62,572],[63,572],[65,572],[66,572],[67,572],[68,572],[69,572],[70,572],[71,572],[72,572],[73,572],[74,572],[75,572],[76,572],[77,572],[78,572],[79,572],[80,572],[81,572],[82,572],[83,572],[84,572],[85,572],[86,554],[87,554],[88,554],[89,554],[90,554],[91,554],[92,554],[93,554],[94,554],[95,554],[96,554],[97,554],[98,554],[99,554],[100,554],[101,554],[102,554],[103,554],[104,554],[105,554],[106,554],[107,554],[108,554],[109,554],[110,554],[111,554],[112,554],[113,554],[115,554],[116,554],[117,554],[118,554],[119,554],[120,554],[121,554],[122,572],[123,572],[125,572],[126,572],[127,572],[128,572],[129,572],[130,572],[131,572],[133,572],[134,572],[135,572],[136,572],[137,572],[138,572],[139,572],[140,572],[141,572],[142,572],[143,572],[144,572],[145,572],[146,572],[147,572],[148,572],[149,554],[150,554],[151,554],[152,554],[153,554],[154,554],[155,554],[156,554],[157,554],[158,554],[159,554],[160,572],[161,572],[162,572],[163,572],[164,572],[165,572],[166,572],[167,572],[168,572],[169,572],[170,572],[171,572],[172,572],[173,579],[175,572],[176,572],[177,572],[178,572],[179,572],[180,572],[182,572],[183,572],[184,572],[185,572],[186,572],[187,572],[188,572],[189,590],[190,590],[191,590],[192,590],[193,590],[194,590],[195,590],[196,590],[197,590],[198,590],[199,590],[200,590],[201,590],[202,590],[203,590],[205,590],[206,590],[207,590],[208,590],[209,590],[210,590],[211,590],[212,590],[213,590],[214,590],[215,590],[216,590],[217,590],[218,590],[219,590],[220,608],[221,608],[222,608],[223,608],[224,608],[225,608],[226,608],[227,608],[228,608],[229,608],[230,590],[231,590],[232,590],[233,590],[234,590],[235,608],[236,608],[237,608],[238,608],[239,608],[240,608],[241,608],[242,608],[243,608],[245,608],[246,608],[247,608],[248,608],[249,608],[250,608],[251,608],[252,608],[253,608],[254,590],[255,590],[256,590],[257,590],[258,590],[259,590],[260,590],[261,590],[262,590],[263,590],[264,590],[265,590],[266,590],[267,590],[268,590],[269,590],[270,590],[271,590],[272,590],[273,590],[274,590],[275,590],[276,572],[277,572],[278,572],[279,572],[280,572],[281,572],[282,572],[283,572],[284,572],[285,572],[286,572],[287,572],[288,572],[289,572],[290,572],[291,572],[292,572],[293,572],[295,572],[297,572],[298,572],[299,572],[300,572],[301,572],[302,572],[303,572],[305,572],[306,572],[307,572],[308,572],[309,572],[310,572],[311,572],[312,590],[313,590],[314,590],[315,590],[316,590],[317,590],[318,590],[319,572],[320,572],[321,572],[322,572],[323,572],[324,572],[325,572],[326,572],[327,572],[328,572],[329,572],[330,572],[331,572],[332,554],[333,554],[334,554],[335,554],[336,554],[337,554],[338,554],[339,554],[340,554],[341,572],[342,572],[343,572],[344,572],[345,572],[346,572],[347,572],[348,572],[349,572],[350,572],[351,572],[352,572],[353,570],[354,572],[355,572],[356,572],[357,572],[358,572],[359,572],[360,572],[361,572],[362,572],[363,572],[364,572],[365,572],[366,572],[367,572],[368,572],[369,572],[370,572],[371,572],[372,590],[373,590],[374,590],[375,608],[376,608],[377,608],[378,608],[379,608],[380,608],[381,608],[382,608],[383,608],[384,608],[385,608],[386,608],[388,608],[389,608],[390,608],[391,626],[392,626],[393,626],[394,626],[395,626],[396,626],[397,626],[399,626],[400,626],[401,626],[402,626],[403,626],[404,626],[405,644],[406,644],[407,644],[408,644],[409,644],[410,644],[411,644],[412,644],[413,644],[415,644],[416,644],[417,644],[418,644],[419,644],[420,644],[421,644],[422,644],[423,644],[424,644],[425,644],[426,644],[427,644],[428,644],[429,644],[430,644],[431,644],[432,644],[433,644],[434,644],[435,644],[436,644],[437,662],[438,662],[439,662],[440,662],[441,662],[442,662],[443,662],[444,662],[445,662],[446,662],[447,662],[448,662],[449,662],[450,662],[451,662],[452,662],[453,662],[454,662],[455,662],[456,662],[457,662],[458,680],[459,680],[460,680],[461,680],[462,680],[463,680],[464,680],[465,680],[466,680],[467,680],[468,680],[469,680],[470,680],[471,680],[472,698],[473,691],[474,698],[475,698],[476,698],[477,698],[478,698],[479,698],[480,698],[481,698],[482,698],[483,698],[484,698],[485,698],[486,698],[487,698],[488,698],[489,698],[490,698],[491,698],[492,698],[493,698],[494,698],[495,716],[496,716],[497,716],[498,716],[499,716],[500,716],[501,716],[502,716],[503,716],[504,716],[505,716],[506,716],[507,716],[508,716],[509,716],[510,716],[511,716],[512,716],[513,716],[514,716],[515,716],[516,716],[517,734],[518,734],[519,734],[520,734],[521,734],[522,734],[523,734],[524,734],[525,734],[527,734],[528,734],[529,734],[530,734],[531,734],[532,734],[533,739],[534,734],[535,734],[536,734],[537,734],[538,734],[539,734],[540,734],[541,734],[542,734],[543,734],[544,734],[545,734],[546,734],[547,752],[548,752],[549,752],[550,752],[551,752],[552,752],[553,752],[554,752],[555,752],[556,752],[557,752],[558,752],[559,752],[560,752],[561,752],[562,752],[563,752],[564,752],[565,752],[566,752],[567,752],[568,752],[569,752],[570,770],[571,770],[572,770],[573,770],[594,248],[595,248],[596,752],[597,770],[599,770],[600,770],[601,770],[602,770],[603,770],[604,770],[605,770],[606,770],[607,770],[608,770],[609,770],[610,770],[611,770],[612,770],[613,770],[614,770],[615,770],[616,770],[617,770],[618,770],[619,770],[620,770],[621,770],[622,770],[623,770],[624,770],[625,770],[626,770],[627,770],[628,770],[629,770],[630,770],[631,770],[632,770],[633,770],[634,770],[635,770],[636,770],[637,770],[638,770],[639,770],[640,770],[641,770],[642,770],[643,770],[644,770],[645,770],[646,770],[647,770],[648,770],[649,770],[650,770],[651,770],[652,770],[653,781],[655,770],[656,770],[657,770],[658,770],[659,770],[660,770],[661,770],[662,770],[663,770],[664,770],[665,770],[666,770],[667,770],[668,770],[669,770],[670,770],[671,770],[672,770],[673,770],[674,770],[675,770],[676,770],[677,770],[678,770],[679,770],[680,770],[681,770],[682,770],[683,770],[684,770],[685,770],[686,770],[687,770],[688,770],[690,824],[691,824],[692,824],[693,824],[694,824],[695,824],[696,824],[697,824],[698,824],[699,824],[700,824],[701,842],[702,842],[703,842],[704,842],[705,842],[706,842],[707,842],[708,842],[709,842],[710,842],[711,842],[712,842],[713,840],[714,842],[715,842],[716,842],[717,842],[718,842],[719,842],[720,842],[721,842],[722,842],[723,842],[724,842],[725,842],[726,842],[727,842],[728,842],[729,860],[730,860],[731,860],[732,860],[733,842],[734,842],[735,842],[736,860],[737,860],[738,860],[739,860],[740,842],[741,842],[742,842],[743,842],[744,842],[745,842],[746,842],[747,842],[748,842],[749,842],[750,842],[751,824],[752,824],[753,842],[754,842],[755,842],[756,842],[757,860],[758,860],[759,860],[760,860],[761,842],[762,842],[763,842],[764,842],[765,842],[766,842],[767,842],[768,842],[769,842],[770,860],[771,860],[772,860],[773,871],[774,860],[775,860],[776,860],[777,860],[778,860],[779,860],[780,860],[781,860],[782,860],[783,860],[784,860],[785,878],[786,878],[787,878],[788,878],[789,860],[790,860],[791,860],[792,860],[793,860],[794,878],[795,878],[796,878],[797,878],[798,878],[799,860],[800,860],[801,860],[802,860],[803,860],[804,860],[805,878],[806,878],[807,878],[808,860],[809,878],[810,860],[811,860],[812,860],[813,860],[814,860],[815,860],[816,878],[817,878],[818,878],[819,878],[820,878],[821,878],[822,878],[823,860],[824,860],[825,860],[826,860],[827,878],[828,878],[829,878],[830,878],[831,878],[832,878],[833,880],[834,878],[835,878],[836,878],[837,878],[838,878],[839,878],[840,896],[841,878],[842,878],[843,878],[844,878],[845,878],[846,878],[847,878],[848,860],[849,860],[850,860],[851,860],[852,860],[853,842],[854,842],[855,842],[856,842],[857,842],[858,842],[859,842],[860,842],[861,842],[862,842],[863,842],[864,842],[865,842],[866,860],[867,860],[868,860],[869,860],[870,860],[871,842],[872,842],[873,842],[874,842],[875,842],[876,842],[877,842],[878,842],[879,842],[880,842],[881,842],[882,842],[883,842],[884,860],[885,878],[886,878],[887,878],[888,878],[889,878],[890,878],[891,878],[892,878],[893,880],[894,878],[895,878],[896,878],[897,878],[898,878],[899,878],[900,878],[901,878],[902,878],[903,878],[904,878],[905,878],[906,878],[907,878],[908,878],[909,878],[910,878],[911,878],[912,860],[913,860],[914,860],[915,860],[916,860],[917,860],[918,842],[919,842],[920,842],[921,860],[922,860],[923,860],[924,860],[925,860],[927,860],[928,860],[929,860],[930,860],[931,860],[932,860],[933,860],[934,860],[935,860],[936,842],[937,842],[938,840],[939,842],[940,842],[941,842],[942,824],[943,824],[944,824],[945,824],[946,824],[947,824],[948,824],[949,824],[950,824],[951,842],[952,842],[953,840],[954,842],[955,842],[956,842],[957,842],[958,842],[959,842],[960,842],[961,842],[962,842],[963,842],[964,842],[965,842],[966,842],[967,842],[968,842],[969,842],[970,842],[971,842],[972,842],[973,842],[974,842],[975,842],[976,842],[977,842],[978,842],[979,842],[980,842],[981,842],[982,842],[983,842],[984,842],[985,842],[986,842],[987,842],[988,842],[989,842],[990,842],[991,842],[992,842],[993,842],[994,842],[995,842],[996,842],[997,842],[998,842],[999,842],[1000,860],[1001,860],[1002,860],[1003,860],[1004,860],[1005,860],[1006,842],[1007,860],[1008,860],[1009,860],[1010,860],[1011,860],[1012,860],[1013,860],[1014,842],[1015,842],[1016,860],[1017,860],[1018,860],[1019,860],[1020,860],[1021,860],[1022,860],[1023,860],[1025,860],[1026,860],[1027,860],[1028,860],[1029,860],[1030,860],[1031,860],[1032,860],[1033,860],[1034,860],[1035,842],[1036,842],[1037,842],[1038,842],[1039,842],[1040,842],[1041,842],[1042,860],[1043,860],[1044,860],[1045,860],[1046,842],[1047,842],[1048,842],[1049,860],[1050,860],[1051,860],[1052,860],[1053,860],[1054,860],[1055,860],[1056,860],[1057,860],[1058,860],[1059,860],[1060,842],[1061,842],[1062,842],[1063,842],[1064,842],[1065,842],[1066,842],[1067,842],[1068,842],[1069,842],[1070,842],[1071,842],[1072,842],[1073,849],[1075,860],[1076,860],[1078,842],[1079,842],[1080,842],[1081,842],[1082,842],[1083,842],[1084,842],[1085,824],[1086,824],[1087,824],[1088,824],[1089,824],[1090,824],[1091,824],[1092,824],[1093,824],[1094,824],[1095,824],[1096,824],[1097,824],[1098,824],[1099,824],[1100,824],[1101,824],[1102,824],[1103,824],[1104,824],[1105,824],[1106,824],[1107,824],[1108,824],[1109,824],[1110,824],[1111,824],[1112,806],[1113,806],[1114,806],[1115,806],[1116,806],[1117,806],[1118,806],[1119,806],[1120,806],[1121,788],[1122,788],[1123,788],[1124,788],[1125,788],[1126,788],[1127,788],[1128,788],[1129,788],[1130,788],[1131,788],[1132,788],[1133,788],[1134,788],[1135,788],[1136,806],[1137,806],[1138,806],[1139,806],[1140,806],[1142,806],[1143,806],[1144,806],[1145,806],[1146,806],[1147,806],[1148,806],[1149,806],[1150,806],[1151,806],[1152,806],[1153,806],[1154,806],[1155,806],[1156,806],[1157,806],[1158,806],[1159,806],[1160,806],[1161,788],[1162,788],[1163,788],[1164,788],[1165,788],[1166,788],[1167,788],[1168,788],[1169,788],[1170,806],[1171,806],[1172,806],[1173,806],[1174,806],[1175,806],[1176,806],[1177,806],[1178,806],[1179,806],[1180,806],[1181,806],[1182,806],[1183,788],[1184,788],[1185,788],[1186,788],[1187,788],[1188,788],[1189,806],[1190,806],[1191,806],[1192,806],[1193,806],[1195,806],[1196,806],[1197,806],[1198,806],[1199,788],[1200,788],[1201,788],[1202,788],[1203,788],[1204,788],[1205,788],[1206,788],[1207,770],[1208,770],[1209,770],[1210,770],[1211,770],[1212,770],[1213,770],[1214,770],[1215,770],[1216,770],[1217,770],[1218,770],[1219,770],[1220,752],[1221,752],[1222,752],[1223,752],[1224,752],[1225,752],[1226,752],[1227,752],[1228,752],[1229,752],[1230,752],[1231,752],[1232,752],[1233,752],[1234,752],[1235,752],[1236,752],[1237,752],[1238,734],[1239,734],[1240,734],[1241,734],[1242,734],[1243,734],[1244,734],[1245,734],[1246,734],[1247,734],[1248,734],[1249,734],[1250,734],[1251,734],[1252,734],[1253,730],[1254,734],[1255,734],[1256,716],[1257,716],[1258,716],[1259,716],[1260,716],[1261,716],[1262,716],[1263,716],[1264,716],[1265,716],[1266,716],[1267,716],[1268,716],[1269,716],[1270,716],[1271,716],[1272,716],[1273,716],[1274,716],[1275,716],[1276,716],[1277,716],[1279,734],[1280,734],[1281,734],[1282,734],[1283,734],[1284,734],[1285,734],[1286,734],[1287,734],[1288,734],[1289,734],[1290,734],[1291,734],[1292,734],[1293,734],[1294,716],[1295,716],[1296,716],[1297,716],[1298,716],[1299,716],[1300,716],[1301,716],[1302,716],[1303,716],[1304,716],[1305,716],[1306,716],[1307,716],[1308,716],[1309,716],[1310,716],[1311,716],[1312,716],[1313,720],[1314,716],[1315,716],[1316,716],[1317,716],[1318,716],[1319,716],[1320,716],[1321,716],[1322,716],[1323,716],[1324,716],[1325,716],[1326,716],[1327,716],[1328,716],[1329,698],[1330,698],[1331,698],[1332,698],[1333,698],[1334,698],[1335,698],[1336,698],[1337,698],[1338,698],[1339,698],[1340,698],[1341,698],[1342,698],[1343,698],[1344,698],[1345,698],[1346,680],[1347,680],[1348,680],[1349,680],[1350,680],[1351,680],[1352,680],[1353,680],[1354,680],[1355,680],[1356,680],[1357,680],[1358,680],[1359,680],[1360,680],[1361,680],[1362,680],[1363,680],[1364,680],[1365,680],[1366,680],[1367,680],[1368,662],[1369,662],[1370,662],[1371,662],[1372,662],[1373,669],[1374,662],[1375,662],[1376,662],[1377,662],[1378,662],[1379,662],[1380,662],[1381,662],[1382,662],[1383,662],[1384,662],[1385,662],[1386,662],[1387,662],[1388,662],[1389,662],[1390,662],[1391,662],[1392,662],[1393,662],[1394,662],[1395,662],[1396,662],[1397,662],[1398,662],[1399,662],[1400,662],[1401,662],[1402,662],[1403,662],[1404,662],[1405,662],[1406,662],[1407,662],[1408,662],[1409,662],[1410,662],[1411,662],[1412,662],[1413,662],[1414,662],[1415,662],[1416,662],[1417,662],[1418,662],[1419,662],[1420,662],[1421,662],[1422,662],[1423,662],[1424,662],[1425,662],[1426,662],[1427,662],[1428,662],[1429,662],[1430,662],[1431,662],[1432,662],[1433,660],[1434,662],[1435,662],[1436,662],[1438,662],[1439,662]];
+
+    var W = 760, H = 340, ML = 52, MR = 20, MT = 16, MB = 52;
+    var TMIN = 20, TMAX = 95;
+    var GAP_A = 9 * 60 + 34, GAP_B = 9 * 60 + 53;   /* station silent, inclusive */
+    var GLITCH_F = 24.8;
+
+    function xPos(min) { return ML + (min / 1440) * (W - ML - MR); }
+    function yPos(f) { return MT + (1 - (f - TMIN) / (TMAX - TMIN)) * (H - MT - MB); }
+    function hhmm(min) {
+      var h = Math.floor(min / 60), m = min % 60;
+      return (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" : "") + m;
     }
 
-    for (var tv = 50; tv <= 110; tv += 10) {
+    var pts = OBS.map(function (r) { return { m: r[0], f: r[1] / 10 }; });
+
+    /* gridlines + axes */
+    for (var tv = TMIN; tv <= TMAX; tv += 10) {
       el("line", { x1: ML, x2: W - MR, y1: yPos(tv), y2: yPos(tv), stroke: "var(--grid)", "stroke-width": 1 }, svg);
       var lb = el("text", { x: ML - 8, y: yPos(tv) + 4, "text-anchor": "end", "class": "axis-text" }, svg);
       lb.textContent = tv + "°F";
     }
     el("line", { x1: ML, x2: W - MR, y1: H - MB, y2: H - MB, stroke: "var(--line)", "stroke-width": 1 }, svg);
-    for (var hr = 0; hr <= 24; hr += 4) {
-      var xi = Math.min((hr * 60) / STEP, N - 1);
-      var xl = el("text", { x: xPos(xi), y: H - MB + 18, "text-anchor": "middle", "class": "axis-text" }, svg);
+    for (var hr = 0; hr <= 24; hr += 3) {
+      var xl = el("text", { x: xPos(hr * 60), y: H - MB + 18, "text-anchor": "middle", "class": "axis-text" }, svg);
       xl.textContent = (hr < 10 ? "0" : "") + hr + ":00";
     }
+    var axlab = el("text", { x: (ML + W - MR) / 2, y: H - MB + 38, "text-anchor": "middle", "class": "anno" }, svg);
+    axlab.textContent = "local time, Denver (MDT)";
 
-    var d = "";
-    for (i = 0; i < N; i++) d += (i === 0 ? "M" : "L") + xPos(i).toFixed(1) + " " + yPos(temps[i]).toFixed(1);
-    el("path", { d: d, fill: "none", stroke: "var(--series-1)", "stroke-width": 2, "stroke-linejoin": "round" }, svg);
+    /* the outage band — drawn as absence, labelled */
+    el("rect", {
+      x: xPos(GAP_A), y: MT, width: xPos(GAP_B + 1) - xPos(GAP_A), height: (H - MB) - MT,
+      fill: "var(--ink)", opacity: 0.05
+    }, svg);
 
-    var sx = xPos(SPIKE), sy = yPos(temps[SPIKE]);
-    el("circle", { cx: sx, cy: sy, r: 4.5, fill: "var(--flag)", stroke: "var(--paper-2)", "stroke-width": 2 }, svg);
-    el("line", { x1: sx + 10, y1: sy + 2, x2: sx + 44, y2: sy + 18, stroke: "var(--line)", "stroke-width": 1 }, svg);
-    var an1 = el("text", { x: sx + 48, y: sy + 22, "class": "anno" }, svg);
-    an1.textContent = "14:05 — 106.2°F for one reading";
-    var an2 = el("text", { x: sx + 48, y: sy + 38, "class": "anno" }, svg);
-    an2.textContent = "+31°F above the reading before";
+    /* the trace, broken wherever a minute is missing */
+    var d = "", prev = null;
+    pts.forEach(function (p) {
+      d += (prev === null || p.m - prev > 1 ? "M" : "L") + xPos(p.m).toFixed(1) + " " + yPos(p.f).toFixed(1);
+      prev = p.m;
+    });
+    el("path", { d: d, fill: "none", stroke: "var(--series-1)", "stroke-width": 1.6, "stroke-linejoin": "round" }, svg);
 
+    /* the two false readings */
+    var bad = pts.filter(function (p) { return p.f === GLITCH_F; });
+    bad.forEach(function (p) {
+      el("circle", { cx: xPos(p.m), cy: yPos(p.f), r: 4, fill: "var(--flag)", stroke: "var(--paper-2)", "stroke-width": 1.5 }, svg);
+    });
+
+    var bx = xPos(bad[0].m), by = yPos(GLITCH_F);
+    el("line", { x1: bx + 8, y1: by - 2, x2: bx + 52, y2: by - 26, stroke: "var(--line)", "stroke-width": 1 }, svg);
+    var a1 = el("text", { x: bx + 56, y: by - 26, "class": "anno" }, svg);
+    a1.textContent = "09:54 & 09:55 — 24.8°F (−4°C)";
+    var a2 = el("text", { x: bx + 56, y: by - 10, "class": "anno" }, svg);
+    a2.textContent = "52°F below the air either side";
+
+    var gl = el("text", { x: xPos(GAP_A) - 6, y: MT + 12, "text-anchor": "end", "class": "anno" }, svg);
+    gl.textContent = "station silent 09:34–09:53 →";
+
+    /* readings either side of the gap — the honesty artefact */
+    var tb = document.querySelector("#glitch-table tbody");
+    var byMin = {};
+    pts.forEach(function (p) { byMin[p.m] = p.f; });
+    for (var mm = 9 * 60 + 30; mm <= 9 * 60 + 57; mm++) {
+      var v = byMin[mm];
+      var tr = document.createElement("tr");
+      tr.innerHTML = "<td>" + hhmm(mm) + "</td><td>" +
+        (v === undefined ? "— no data" : v.toFixed(1) + "°F") + "</td>";
+      tb.appendChild(tr);
+    }
+
+    /* hover */
     var hoverDot = null, hoverLine = null;
     function hide() {
       tip.style.opacity = 0;
@@ -720,22 +781,33 @@
     svg.addEventListener("pointermove", function (ev) {
       var rect = svg.getBoundingClientRect();
       var px = (ev.clientX - rect.left) * (W / rect.width);
-      var idx = Math.round(((px - ML) / (W - ML - MR)) * (N - 1));
-      if (idx < 0 || idx > N - 1) { hide(); return; }
+      var min = Math.round(((px - ML) / (W - ML - MR)) * 1440);
+      if (min < 0 || min > 1439) { hide(); return; }
+      /* nearest actual reading, so the tooltip never invents one */
+      var best = null;
+      for (var k = 0; k < pts.length; k++) {
+        if (best === null || Math.abs(pts[k].m - min) < Math.abs(best.m - min)) best = pts[k];
+      }
       if (hoverLine) hoverLine.remove();
       if (hoverDot) hoverDot.remove();
+      var silent = min >= GAP_A && min <= GAP_B;
       hoverLine = el("line", {
-        x1: xPos(idx), x2: xPos(idx), y1: MT, y2: H - MB,
+        x1: xPos(min), x2: xPos(min), y1: MT, y2: H - MB,
         stroke: "var(--line)", "stroke-width": 1, "stroke-dasharray": "3 3"
       }, svg);
-      hoverDot = el("circle", {
-        cx: xPos(idx), cy: yPos(temps[idx]), r: 3.5,
-        fill: "var(--series-1)", stroke: "var(--paper-2)", "stroke-width": 2
-      }, svg);
-      tip.innerHTML = hhmm(idx) + " · " + temps[idx].toFixed(1) + "°F" + (idx === SPIKE ? "<br>sensor excursion" : "");
+      if (silent) {
+        tip.innerHTML = hhmm(min) + "<br>no reading transmitted";
+      } else {
+        hoverDot = el("circle", {
+          cx: xPos(best.m), cy: yPos(best.f), r: 3.5,
+          fill: "var(--series-1)", stroke: "var(--paper-2)", "stroke-width": 2
+        }, svg);
+        tip.innerHTML = hhmm(best.m) + " · " + best.f.toFixed(1) + "°F" +
+          (best.f === GLITCH_F ? "<br>instrument error" : "");
+      }
       tip.style.opacity = 1;
       var fr = fig.getBoundingClientRect();
-      tip.style.left = Math.min(ev.clientX - fr.left + 14, fr.width - 140) + "px";
+      tip.style.left = Math.min(ev.clientX - fr.left + 14, fr.width - 150) + "px";
       tip.style.top = (ev.clientY - fr.top - 10) + "px";
     });
     svg.addEventListener("pointerleave", hide);

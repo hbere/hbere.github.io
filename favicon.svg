@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Isobar contours">
+  <title>Hal Beresford</title>
+  <rect width="100" height="100" rx="22" fill="#0f2b3d"/>
+  <g fill="none" stroke="#6fd3c7" stroke-width="4.2" stroke-linecap="round">
+    <path d="M10 -5 C26 30, 0 64, 14 105"/>
+    <path d="M30 -5 C48 30, 20 64, 36 105"/>
+    <path d="M54 -5 C70 28, 46 60, 58 105"/>
+    <path d="M84 -5 C98 26, 72 58, 86 105"/>
+  </g>
+</svg>
