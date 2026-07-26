@@ -346,9 +346,9 @@
       <p>What made this more than a shaggy-dog story was that the official record did
       not catch the error at first. That afternoon, the National Weather Service's
       initial climatological report for Denver asserted that the morning's low had been
-      in the mid twenties, a record for June 26th. Only about four minutes later did the
-      National Weather Service release a corrected report stating that the morning's low
-      was actually 56°F.</p>
+      24 degrees, a record for June 26th. Eleven minutes later the National Weather
+      Service released a corrected report stating that the morning's low was actually
+      56°F.</p>
 
       <p>Data quality is when the data is able to perform the function for which it was
       collected. In Denver the morning of June 26th, the data quality was suspect for all
@@ -750,7 +750,7 @@
     var bx = xPos(bad[0].m), by = yPos(GLITCH_F);
     el("line", { x1: bx + 8, y1: by - 2, x2: bx + 52, y2: by - 26, stroke: "var(--line)", "stroke-width": 1 }, svg);
     var a1 = el("text", { x: bx + 56, y: by - 26, "class": "anno" }, svg);
-    a1.textContent = "09:54 & 09:55 — 24.8°F (−4°C)";
+    a1.textContent = "09:54 & 09:55 — 24.8°F";
     var a2 = el("text", { x: bx + 56, y: by - 10, "class": "anno" }, svg);
     a2.textContent = "52°F below the air either side";
 
