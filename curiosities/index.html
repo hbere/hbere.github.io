@@ -78,6 +78,7 @@
   a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
   p { margin: 0 0 1.15rem; }
   .soft { color: var(--ink-soft); }
+  code { font-family: var(--font-mono); font-size: 0.92em; }
 
   .eyebrow {
     font-family: var(--font-mono);
@@ -316,14 +317,14 @@
       <p class="acc">Exh. 003 · Instruments · Denver, 26 June 2026</p>
       <h2>The Two Minutes Denver Spent in Winter</h2>
 
-      <p>At 9:33 on a June morning, the weather station at Denver International
-      Airport was reporting 77°F and climbing toward what would become a 90°F
-      afternoon. At 9:34 it stopped reporting anything at all. For the next twenty
-      minutes every field it published — temperature, wind speed, wind direction —
-      came across as <code>-999</code>, the value a station sent when it had nothing
-      to give.</p>
+      <p>At 9:33 AM on June 26th, the Denver International Airport weather station
+      reported an outdoor temperature of 77°F, climbing toward what would become a 90°F
+      afternoon. But at 9:34, the station fell silent. For the next twenty minutes every
+      field it published — temperature, wind speed, wind direction — came across as
+      <code>-999</code> (no value).</p>
 
-      <p>Then it came back, and for two minutes it insisted the air was 24.8°F.</p>
+      <p>When the weather station came back online at 9:54 AM, for two minutes it
+      insisted the air was 24.8°F:</p>
 
       <figure id="fig-glitch">
         <svg id="glitch-svg" viewBox="0 0 760 340" role="img"
