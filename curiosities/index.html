@@ -319,20 +319,19 @@
       <p>At 9:33 on a June morning, the weather station at Denver International
       Airport was reporting 77°F and climbing toward what would become a 90°F
       afternoon. At 9:34 it stopped reporting anything at all. For the next twenty
-      minutes every field it publishes — temperature, wind speed, wind direction —
-      came across as <code>-999</code>, the sentinel value instruments use to say
-      <em>I have nothing for you</em>.</p>
+      minutes every field it published — temperature, wind speed, wind direction —
+      came across as <code>-999</code>, the value a station sent when it had nothing
+      to give.</p>
 
       <p>Then it came back, and for two minutes it insisted the air was 24.8°F.</p>
 
       <figure id="fig-glitch">
         <svg id="glitch-svg" viewBox="0 0 760 340" role="img"
-          aria-label="Every one-minute temperature reading from Denver International Airport on 26 June 2026. The curve rises from 55 degrees at dawn to 90 in the afternoon, broken by a twenty-minute gap at 9:34am, immediately after which two readings register 24.8 degrees before the curve resumes."></svg>
+          aria-label="Every one-minute temperature reading from Denver International Airport on 26 June 2026. The curve rose from 55 degrees at dawn to 90 in the afternoon, broken by a twenty-minute gap at 9:34am, immediately after which two readings registered 24.8 degrees before it resumed."></svg>
         <div class="tooltip" id="glitch-tip"></div>
         <figcaption id="glitch-cap">Fig. 3 — Every one-minute reading Denver
-        International transmitted that day, as recorded off the wire. The line breaks
-        where the station went silent; it is not drawn across the gap, because nothing
-        was measured there.</figcaption>
+        International transmitted that day, as recorded off the wire. Where the station went
+        silent the line simply stops: nothing was measured there, so nothing was drawn.</figcaption>
         <details class="datatable">
           <summary>the readings either side of the gap</summary>
           <table id="glitch-table">
@@ -342,25 +341,31 @@
         </details>
       </figure>
 
-      <p>24.8°F is exactly −4°C, a suspiciously round number in the units the sensor
-      actually works in. It is also 52°F below the air on either side of it, and it
+      <p>24.8°F was exactly −4°C, a suspiciously round number in the units the sensor
+      actually worked in. It was also 52°F below the air on either side of it, and it
       arrived while Denver was having an ordinary warm morning. Two readings later the
       station was back at 77°F as though nothing had happened.</p>
 
-      <p>What makes this more than a shaggy-dog story is that the lie was
-      <em>plausibly formatted</em>. A <code>-999</code> is easy to discard — no
-      thermometer means that. But 24.8°F is a real temperature, correctly encoded,
-      inside every range check a naive filter would apply. It is January's reading
-      delivered in June. Catching it takes a rule with a sense of context: compare each
-      reading against its neighbours and reject what disagrees with them violently,
-      rather than merely checking whether a number is physically possible.</p>
+      <p>What made this more than a shaggy-dog story was that the lie was
+      <em>plausibly formatted</em>. A <code>-999</code> was easy to discard — nothing
+      meant that but a broken instrument. 24.8°F was a real temperature, correctly
+      encoded, sitting inside every range check a naive filter would have applied. It
+      was January's reading delivered in June. Catching it took a rule with a sense of
+      context: one that compared each reading against its neighbours and threw out
+      whatever disagreed with them violently, rather than merely asking whether a
+      number was physically possible.</p>
 
-      <p>The official record was never fooled — Denver's daily summary for the 26th
-      kept its low at 56°F and the bad readings were quality-controlled out. But that
-      correction happens hours later, and in the meantime the wrong number is what
-      exists. Climate archives, insurance triggers and settlement systems are all bound
-      to <em>what the instrument said</em> rather than to what the air did, and they do
-      not all wait for the correction. A two-minute lie can outlive the two minutes.</p>
+      <p>The official record did not catch it either, not at first. That evening the
+      National Weather Service issued Denver's climate report for the 26th, and it
+      confirmed the day's low as <b>24°F</b>. A correction followed about four minutes
+      later, restoring the 56°F that every other reading of the day had agreed on. For
+      those four minutes the bad number was not a glitch on a wire somewhere — it was
+      the official climate record for the city.</p>
+
+      <p>Climate archives, insurance triggers and settlement systems inherited whatever
+      the record said at the moment they read it, and they did not all wait four
+      minutes. The instrument told the truth again after two minutes; the paperwork took
+      a little longer, and whatever copied the paperwork in between kept the lie.</p>
     </article>
 
     <hr class="rule" />
