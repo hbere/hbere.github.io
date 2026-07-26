@@ -218,7 +218,9 @@
     text-transform: uppercase; color: var(--ink-soft); margin: 0 0 1.1rem; font-weight: 400;
   }
   .planned { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
-  .planned li { display: grid; grid-template-columns: 5.5rem 1fr; gap: 0.9rem; align-items: baseline; }
+  /* Column must fit "Exhibit 004" in tracked-out mono; 5.5rem fitted "Exh. 004" only.
+     7rem measured as an exact fit on Menlo — 7.5rem leaves slack for wider fallbacks. */
+  .planned li { display: grid; grid-template-columns: 7.5rem 1fr; gap: 0.9rem; align-items: baseline; }
   .planned .num { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.12em; color: var(--accent); }
   .planned .what { color: var(--ink-soft); font-size: 0.98rem; }
   .planned .what b { color: var(--ink); font-weight: 600; }
@@ -254,7 +256,7 @@
 
     <!-- ══════════════ EXHIBIT 001 ══════════════ -->
     <article class="exhibit" id="exh-001">
-      <p class="acc">Exh. 001 · Mathematics · July 2026</p>
+      <p class="acc">Exhibit 001 · Mathematics · July 2026</p>
       <h2>The Dimension Ladder</h2>
 
       <p>A point has no dimensions. Drag it one inch and it sweeps out a line. Drag
@@ -277,7 +279,7 @@
         <canvas id="dim-canvas" height="360" role="img"
           aria-label="A rotating wireframe projection of an n-dimensional cube; use the buttons to change n from 0 to 6."></canvas>
         <p class="readout" id="dim-readout"></p>
-        <figcaption>Fig. 1 — The n-cube, projected down onto your screen. For n&nbsp;≥&nbsp;4
+        <figcaption>Figure 1 — The n-cube, projected down onto your screen. For n&nbsp;≥&nbsp;4
         you are looking at a shadow of a shadow: the same trick a drawing of a cube already
         plays, played one more time.</figcaption>
       </figure>
@@ -294,7 +296,7 @@
 
     <!-- ══════════════ EXHIBIT 002 ══════════════ -->
     <article class="exhibit" id="exh-002">
-      <p class="acc">Exh. 002 · Mathematics of money · July 2026</p>
+      <p class="acc">Exhibit 002 · Mathematics of money · July 2026</p>
       <h2>Compounding Ignores Zeros</h2>
 
       <p>Take one dollar and one hundred million dollars, and compound both at 7% a
@@ -328,7 +330,7 @@
       <p>Switch to a logarithmic axis — the axis on which <em>multiplying</em> is what
       moves you — and the two curves become the same straight line, eight decades
       apart. Same slope. Same doubling time, a shade over ten years. The dollar and
-      the fortune are making identical jumps; 7% is 7%. The zeros only record where
+      the fortune are making identical jumps: 7% is 7%. The zeros only record where
       you started, never how fast you are going.</p>
     </article>
 
@@ -336,7 +338,7 @@
 
     <!-- ══════════════ EXHIBIT 003 ══════════════ -->
     <article class="exhibit" id="exh-003">
-      <p class="acc">Exh. 003 · Instruments · Denver, 26 June 2026</p>
+      <p class="acc">Exhibit 003 · Instruments · Denver, 26 June 2026</p>
       <h2>The Two Summer Minutes Denver Spent in Winter</h2>
 
       <p>At 9:33 AM on June 26th, the Denver International Airport weather station
@@ -353,7 +355,7 @@
         <svg id="glitch-svg" viewBox="0 0 760 340" role="img"
           aria-label="Every one-minute temperature reading from Denver International Airport on 26 June 2026. The curve rose from 55 degrees at dawn to 90 in the afternoon, broken by a twenty-minute gap at 9:34am, immediately after which two readings registered 24.8 degrees before it resumed."></svg>
         <div class="tooltip" id="glitch-tip"></div>
-        <figcaption id="glitch-cap">Fig. 3 — Every one-minute reading Denver
+        <figcaption id="glitch-cap">Figure 3 — Every one-minute reading Denver
         International transmitted that day, as recorded off the wire. The gap in gray
         illustrates where the station went silent.
         <span class="src">Chart: KDEN one-minute observations, recorded as received.
@@ -405,13 +407,13 @@
     <section>
       <h2 class="label">In preparation</h2>
       <ul class="planned">
-        <li><span class="num">Exh. 004</span><span class="what"><b>A storm in three
+        <li><span class="num">Exhibit 004</span><span class="what"><b>A storm in three
         views.</b> One severe-weather event as the satellite saw it, as the surface
         analysis drew it, and as a single barometer recorded it passing overhead.</span></li>
-        <li><span class="num">Exh. 005</span><span class="what"><b>The missing
+        <li><span class="num">Exhibit 005</span><span class="what"><b>The missing
         readings.</b> A parser that could not read temperatures below zero, and the
         winter-shaped hole it quietly ate in a decade of climate records.</span></li>
-        <li><span class="num">Exh. 006</span><span class="what"><b>Settlement by
+        <li><span class="num">Exhibit 006</span><span class="what"><b>Settlement by
         rounding.</b> Questions that resolve yes or no on whether one number rounds up
         — and the official rules that decide it.</span></li>
       </ul>
@@ -705,8 +707,8 @@
       }
 
       cap.textContent = mode === "linear"
-        ? "Fig. 2 — On a linear axis the dollar never registers at all. Try the log axis."
-        : "Fig. 2 — On a log axis they are the same line. Doubling time ≈ 10.2 years for both.";
+        ? "Figure 2 — On a linear axis the dollar never registers at all. Try the log axis."
+        : "Figure 2 — On a log axis they are the same line. Doubling time ≈ 10.2 years for both.";
     }
     draw();
 
