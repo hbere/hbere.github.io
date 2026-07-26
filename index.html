@@ -275,7 +275,8 @@
       </div>
     </section>
 
-    <footer>Built and operated solo. Not affiliated with or endorsed by Kalshi.</footer>
+    <footer>Built and operated solo. Not affiliated with or endorsed by Kalshi.<br />
+    © <span class="years">2026</span> Hal Beresford</footer>
   </main>
 
 <script>
@@ -395,6 +396,18 @@
     clearTimeout(rt); rt = setTimeout(function () { draw(1); }, 120);
   });
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () { draw(1); });
+})();
+</script>
+<script>
+/* Copyright year. The markup carries a static 2026 so the notice is right with
+   JavaScript off; from 2027 onward this widens it to a range ending in the
+   current year (2026–2027, 2026–2028, …). */
+(function () {
+  var y = new Date().getFullYear();
+  if (y > 2026) {
+    var spans = document.querySelectorAll(".years");
+    for (var i = 0; i < spans.length; i++) spans[i].textContent = "2026\u2013" + y;
+  }
 })();
 </script>
 </body>

@@ -143,6 +143,23 @@
   figure svg { display: block; width: 100%; height: auto; }
   figure canvas { display: block; width: 100%; height: 360px; }
 
+  /* source lines — smaller than the caption they hang off, same muted ink so
+     contrast is unchanged */
+  figcaption .src { display: block; margin-top: 0.5rem; font-size: 0.82rem; }
+
+  /* quoted text product: fixed-width, and it MUST scroll rather than push the
+     page sideways — the lines are ~55 chars, wider than a phone */
+  figure.product pre {
+    margin: 0;
+    padding: 0.1rem 0 0.3rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    line-height: 1.8;
+    color: var(--ink);
+    white-space: pre;
+    overflow-x: auto;
+  }
+
   .figbar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 0.9rem; margin-bottom: 0.7rem; }
   .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 3px; overflow: hidden; background: var(--paper); }
   .seg button {
@@ -205,6 +222,11 @@
   .planned .num { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.12em; color: var(--accent); }
   .planned .what { color: var(--ink-soft); font-size: 0.98rem; }
   .planned .what b { color: var(--ink); font-weight: 600; }
+
+  /* contact row — same component as the front page */
+  .contact { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; font-family: var(--font-mono); font-size: 0.9rem; }
+  .contact a { text-decoration: none; }
+  .contact a:hover { text-decoration: underline; }
 
   footer { margin-top: clamp(2.5rem, 6vw, 3.5rem); font-size: 0.8rem; color: var(--ink-soft); }
   footer a { color: var(--ink-soft); }
@@ -333,7 +355,13 @@
         <div class="tooltip" id="glitch-tip"></div>
         <figcaption id="glitch-cap">Fig. 3 — Every one-minute reading Denver
         International transmitted that day, as recorded off the wire. The gap in gray
-        illustrates where the station went silent.</figcaption>
+        illustrates where the station went silent.
+        <span class="src">Chart: KDEN one-minute observations, recorded as received.
+        Climate reports: National Weather Service Denver/Boulder, issued
+        <a href="https://mesonet.agron.iastate.edu/wx/afos/p.php?pil=CLIDEN&amp;e=202606262230">4:30&nbsp;PM&nbsp;MDT</a>
+        and
+        <a href="https://mesonet.agron.iastate.edu/wx/afos/p.php?pil=CLIDEN&amp;e=202606262241">4:41&nbsp;PM&nbsp;MDT</a>,
+        26 June 2026.</span></figcaption>
         <details class="datatable">
           <summary>the readings either side of the gap</summary>
           <table id="glitch-table">
@@ -349,6 +377,19 @@
       24 degrees, a record for June 26th. Eleven minutes later the National Weather
       Service released a corrected report stating that the morning's low was actually
       56°F.</p>
+
+      <figure class="product">
+<pre>430 PM MDT   MINIMUM   24R   856 AM   record 40   1968
+441 PM MDT   MINIMUM   56    440 AM   record 40   1968</pre>
+        <figcaption>The minimum-temperature line from each report, as issued.
+        <code>R</code> flags a record; the standing June 26th record was 40°F, set in
+        1968.
+        <span class="src">National Weather Service Denver/Boulder, climate report for
+        Denver, 26 June 2026:
+        <a href="https://mesonet.agron.iastate.edu/wx/afos/p.php?pil=CLIDEN&amp;e=202606262230">4:30&nbsp;PM&nbsp;MDT</a>
+        ·
+        <a href="https://mesonet.agron.iastate.edu/wx/afos/p.php?pil=CLIDEN&amp;e=202606262241">4:41&nbsp;PM&nbsp;MDT</a>.</span></figcaption>
+      </figure>
 
       <p>Data quality is when the data is able to perform the function for which it was
       collected. In Denver the morning of June 26th, the data quality was suspect for all
@@ -376,9 +417,24 @@
       </ul>
     </section>
 
+    <hr class="rule" />
+
+    <section>
+      <h2 class="label">Get in touch</h2>
+      <p class="soft" style="margin-bottom:1rem;font-size:0.98rem;">
+        Looking for finance, analytics, or founding-team roles — anywhere the job is turning messy
+        real-world data into decisions. Happy to walk you through the whole system.
+      </p>
+      <div class="contact">
+        <a href="https://www.linkedin.com/in/halberesford">linkedin.com/in/halberesford</a>
+        <a href="https://github.com/hbere">github.com/hbere</a>
+      </div>
+    </section>
+
     <footer>
       Kept by Hal Beresford · <a href="/">back to the front page</a><br />
-      Figures marked illustrative are reconstructions, not records.
+      Figures marked illustrative are reconstructions, not records.<br />
+      © <span class="years">2026</span> Hal Beresford
     </footer>
   </main>
 
@@ -811,6 +867,18 @@
     svg.addEventListener("pointerleave", hide);
   })();
 
+})();
+</script>
+<script>
+/* Copyright year. The markup carries a static 2026 so the notice is right with
+   JavaScript off; from 2027 onward this widens it to a range ending in the
+   current year (2026–2027, 2026–2028, …). */
+(function () {
+  var y = new Date().getFullYear();
+  if (y > 2026) {
+    var spans = document.querySelectorAll(".years");
+    for (var i = 0; i < spans.length; i++) spans[i].textContent = "2026\u2013" + y;
+  }
 })();
 </script>
 </body>
