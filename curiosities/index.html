@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>A Cabinet of Curiosities — Hal Beresford</title>
-<meta name="description" content="A small catalogue of curiosities from forecasting work: the dimension ladder from a point to a six-dimensional cube, why compounding ignores the size of your fortune, and the morning a Denver thermometer reported 24.8°F in June." />
+<meta name="description" content="A small catalogue of curiosities from forecasting work: the dimension ladder from a point to a six-dimensional cube, why compounding ignores the size of your fortune, the morning a Denver thermometer reported 24.8°F in June, and what a cloud-services table taught me about negative claims." />
 <link rel="canonical" href="https://halberesford.com/curiosities/" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="A Cabinet of Curiosities — Hal Beresford" />
@@ -212,6 +212,39 @@
     border-bottom: 1px solid var(--line); color: var(--ink-soft); font-weight: 400;
   }
 
+  /* Available to screen readers, absent from the visual layout. */
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; padding: 0;
+    margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+  }
+
+  /* ── constraint matrix (Exh. 004) ────────────────────────────── */
+  /* Five columns of product names do not fit a phone. The table scrolls
+     inside its own figure rather than pushing the page sideways, and the
+     constraint column stays put so a scrolled-to cell keeps its row label. */
+  .matrix-scroll { overflow-x: auto; }
+  .matrix {
+    border-collapse: collapse; width: 100%; min-width: 33rem;
+    font-size: 0.85rem; line-height: 1.4;
+  }
+  .matrix th, .matrix td {
+    text-align: left; vertical-align: top;
+    padding: 0.55rem 0.75rem 0.55rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .matrix thead th {
+    font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--accent); font-weight: 500;
+    white-space: nowrap; border-bottom-color: var(--ink-soft);
+  }
+  .matrix tbody th {
+    font-weight: 400; color: var(--ink-soft);
+    position: sticky; left: 0; background: var(--paper-2);
+    padding-right: 1.1rem;
+  }
+  .matrix td { color: var(--ink); font-weight: 500; }
+  .matrix tbody tr:last-child th, .matrix tbody tr:last-child td { border-bottom: 0; }
+
   /* ── in preparation ──────────────────────────────────────────── */
   .label {
     font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.16em;
@@ -404,16 +437,125 @@
 
     <hr class="rule" />
 
+    <!-- ══════════════ EXHIBIT 004 ══════════════ -->
+    <article class="exhibit" id="exh-004">
+      <p class="acc">Exhibit 004 · Infrastructure · 30 July 2026</p>
+      <h2>Name the Constraint Before You Buy the Service</h2>
+
+      <p>Working through AWS's tutorials, I kept asking the same two questions about
+      every service I hit: what constraint does this remove, and do I have that
+      constraint?</p>
+
+      <p>The second question is the one that saves money. Hadoop got a no — my data
+      doesn't need distributed processing at that scale. Aurora got a no — my workload is
+      analytical, not transactional. Lambda got a no — my processes run long and hold
+      persistent connections, and a fifteen-minute execution limit and statelessness rule
+      that out. Three no's, three different reasons. None of them a judgment about the
+      service.</p>
+
+      <p>So I drew the table. Nine constraints, four providers, and the discipline of
+      naming the problem before naming the product.</p>
+
+      <figure id="fig-matrix">
+        <div class="matrix-scroll">
+          <table class="matrix">
+            <caption class="visually-hidden">Nine infrastructure constraints and the
+            matching service from each of four cloud providers.</caption>
+            <thead>
+              <tr>
+                <th scope="col">the constraint</th>
+                <th scope="col">AWS</th>
+                <th scope="col">Azure</th>
+                <th scope="col">Google Cloud</th>
+                <th scope="col">DigitalOcean</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">A machine that is always on</th>
+                <td>EC2</td><td>Virtual Machines</td><td>Compute Engine</td><td>Droplets</td></tr>
+              <tr><th scope="row">Work that runs when triggered</th>
+                <td>Lambda</td><td>Functions</td><td>Cloud Run functions</td><td>Functions</td></tr>
+              <tr><th scope="row">Containers without hosts</th>
+                <td>Fargate</td><td>Container Apps</td><td>Cloud Run</td><td>App Platform</td></tr>
+              <tr><th scope="row">Cheap, durable bulk storage</th>
+                <td>S3</td><td>Blob Storage</td><td>Cloud Storage</td><td>Spaces</td></tr>
+              <tr><th scope="row">Many clients need ACID&nbsp;+ failover</th>
+                <td>Aurora</td><td>SQL Database</td><td>Cloud SQL</td><td>Managed PostgreSQL</td></tr>
+              <tr><th scope="row">Analytics over huge datasets</th>
+                <td>Redshift</td><td>Synapse</td><td>BigQuery</td><td>Managed OpenSearch</td></tr>
+              <tr><th scope="row">Producers must decouple</th>
+                <td>SQS</td><td>Service Bus</td><td>Pub/Sub</td><td>Managed Kafka</td></tr>
+              <tr><th scope="row">Knowing when something breaks</th>
+                <td>CloudWatch</td><td>Monitor</td><td>Cloud Monitoring</td><td>Monitoring</td></tr>
+              <tr><th scope="row">Training and serving models</th>
+                <td>SageMaker AI</td><td>Machine Learning</td><td>Gemini Enterprise Agent Platform</td><td>GPU Droplets</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <figcaption>Figure 4 — The same nine constraints across four providers. Read a
+        row, not a column: the question is which cell matches a constraint you actually
+        have.
+        <span class="src">Every product name verified against vendor documentation on
+        30 July 2026. Cloud naming moves; see below.</span></figcaption>
+      </figure>
+
+      <p>Building it taught me more than reading about it would have, mostly through
+      being wrong.</p>
+
+      <p>My first draft claimed DigitalOcean had no answer for decoupling producers from
+      consumers. It does — Managed Kafka, generally available since 2023. My second draft
+      claimed they had nothing for training and serving models. They market GPU model
+      training and fine-tuning on dedicated pages. Two false gaps, both in the same
+      column, both trivially disprovable by anyone who looked. The pattern is worth
+      naming: <b>every error was a negative claim.</b> Asserting a service exists is
+      checkable in one search; asserting one doesn't exist requires you to have looked
+      everywhere, and I hadn't.</p>
+
+      <p>I also caught myself optimizing for the wrong thing. Wanting each cell to be
+      distinct, I replaced Google's Cloud Run with GKE Autopilot so no product name would
+      appear twice — a tidy table, and a worse one, because Google's own documentation
+      positions Cloud Run as the no-infrastructure option and never calls Autopilot
+      serverless. I had chosen a formatting property over an accurate one and told myself
+      it was rigor. Cloud Run appears twice above. That repetition is the truth: Google
+      folded Cloud Functions into Cloud Run in 2024, and the products really are one
+      family now.</p>
+
+      <p>Microsoft Fabric never made it into the table at all. It's where Microsoft is
+      steering new analytics work, but its own documentation compares Fabric to Azure
+      rather than placing it inside Azure, and notes you don't need an Azure account to
+      use it. In a table organized by cloud provider, it has nowhere to sit. Synapse
+      holds the cell instead.</p>
+
+      <p>That verification date matters more than it should. In the course of checking, I
+      found that Google had renamed Vertex AI to Gemini Enterprise Agent Platform, AWS had
+      renamed SageMaker to SageMaker AI, Cloud Functions had become Cloud Run functions,
+      and AWS App Runner had stopped accepting new customers. Four changes in roughly two
+      years. Assume some of this is stale by the time you read it.</p>
+
+      <p>A few cells are judgment calls rather than facts, and reasonable people will
+      place them differently. DigitalOcean's Managed OpenSearch is the weakest — it's
+      search and log analytics, not a warehouse in the sense BigQuery and Redshift are.
+      Aurora is right, though Aurora DSQL is arguably sharper for the specific pairing of
+      ACID guarantees and fast failover. Synapse is accurate but reads a step behind
+      Microsoft's current direction.</p>
+
+      <p>The table isn't the point. The question is: name the constraint first, and most
+      of the buying decision makes itself.</p>
+
+    </article>
+
+    <hr class="rule" />
+
     <section>
       <h2 class="label">In preparation</h2>
       <ul class="planned">
-        <li><span class="num">Exhibit 004</span><span class="what"><b>A storm in three
+        <li><span class="num">Exhibit 005</span><span class="what"><b>A storm in three
         views.</b> One severe-weather event as the satellite saw it, as the surface
         analysis drew it, and as a single barometer recorded it passing overhead.</span></li>
-        <li><span class="num">Exhibit 005</span><span class="what"><b>The missing
+        <li><span class="num">Exhibit 006</span><span class="what"><b>The missing
         readings.</b> A parser that could not read temperatures below zero, and the
         winter-shaped hole it quietly ate in a decade of climate records.</span></li>
-        <li><span class="num">Exhibit 006</span><span class="what"><b>Settlement by
+        <li><span class="num">Exhibit 007</span><span class="what"><b>Settlement by
         rounding.</b> Questions that resolve yes or no on whether one number rounds up
         — and the official rules that decide it.</span></li>
       </ul>
