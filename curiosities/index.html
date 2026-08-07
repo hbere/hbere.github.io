@@ -250,13 +250,6 @@
     font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.16em;
     text-transform: uppercase; color: var(--ink-soft); margin: 0 0 1.1rem; font-weight: 400;
   }
-  .planned { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
-  /* Column must fit "Exhibit 004" in tracked-out mono; 5.5rem fitted "Exh. 004" only.
-     7rem measured as an exact fit on Menlo — 7.5rem leaves slack for wider fallbacks. */
-  .planned li { display: grid; grid-template-columns: 7.5rem 1fr; gap: 0.9rem; align-items: baseline; }
-  .planned .num { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.12em; color: var(--accent); }
-  .planned .what { color: var(--ink-soft); font-size: 0.98rem; }
-  .planned .what b { color: var(--ink); font-weight: 600; }
 
   /* contact row — same component as the front page */
   .contact { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; font-family: var(--font-mono); font-size: 0.9rem; }
@@ -267,7 +260,6 @@
   footer a { color: var(--ink-soft); }
 
   @media (max-width: 34rem) {
-    .planned li { grid-template-columns: 1fr; gap: 0.15rem; }
     .spinrow { margin-left: 0; }
     figure canvas { height: 300px; }
   }
@@ -545,21 +537,6 @@
     </article>
 
     <hr class="rule" />
-
-    <section>
-      <h2 class="label">In preparation</h2>
-      <ul class="planned">
-        <li><span class="num">Exhibit 005</span><span class="what"><b>A storm in three
-        views.</b> One severe-weather event as the satellite saw it, as the surface
-        analysis drew it, and as a single barometer recorded it passing overhead.</span></li>
-        <li><span class="num">Exhibit 006</span><span class="what"><b>The missing
-        readings.</b> A parser that could not read temperatures below zero, and the
-        winter-shaped hole it quietly ate in a decade of climate records.</span></li>
-        <li><span class="num">Exhibit 007</span><span class="what"><b>Settlement by
-        rounding.</b> Questions that resolve yes or no on whether one number rounds up
-        — and the official rules that decide it.</span></li>
-      </ul>
-    </section>
 
     <hr class="rule" />
 
