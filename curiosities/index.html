@@ -245,6 +245,29 @@
   .matrix td { color: var(--ink); font-weight: 500; }
   .matrix tbody tr:last-child th, .matrix tbody tr:last-child td { border-bottom: 0; }
 
+  /* ── share row ───────────────────────────────────────────────── */
+  /* Deliberately quiet: mono microtype on a hairline, no brand colours or
+     icon chrome. A cabinet label, not a social bar. */
+  .share {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.45rem 1rem;
+    margin: 1.7rem 0 0; padding-top: 0.85rem;
+    border-top: 1px solid var(--line);
+    font-family: var(--font-mono); font-size: 0.72rem;
+  }
+  .share .share-label {
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft);
+  }
+  .share a, .share button {
+    font: inherit; color: var(--accent); background: none; border: 0;
+    padding: 0; cursor: pointer; text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+  .share a:hover, .share button:hover { border-bottom-color: var(--accent); }
+  .share a:focus-visible, .share button:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px;
+  }
+  .share button[data-state="done"] { color: var(--ink-soft); cursor: default; }
+
   /* ── in preparation ──────────────────────────────────────────── */
   .label {
     font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.16em;
@@ -315,6 +338,14 @@
       dimensions there are 64 corners and 192 edges, and the shadow starts to look
       like lace. The object is no less real for being unvisualisable; it is exactly as
       real as the number 2<sup>6</sup>.</p>
+      <p class="share">
+        <span class="share-label">Share Exhibit 001</span>
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fhalberesford.com%2Fcuriosities%2F%23exh-001" target="_blank" rel="noopener"
+           aria-label="Share this exhibit on LinkedIn: The Dimension Ladder">LinkedIn</a>
+        <button type="button" data-copy="https://halberesford.com/curiosities/#exh-001"
+           aria-label="Copy a direct link to this exhibit: The Dimension Ladder">Copy link</button>
+      </p>
+
     </article>
 
     <hr class="rule" />
@@ -357,6 +388,14 @@
       apart. Same slope. Same doubling time, a shade over ten years. The dollar and
       the fortune are making identical jumps: 7% is 7%. The zeros only record where
       you started, never how fast you are going.</p>
+      <p class="share">
+        <span class="share-label">Share Exhibit 002</span>
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fhalberesford.com%2Fcuriosities%2F%23exh-002" target="_blank" rel="noopener"
+           aria-label="Share this exhibit on LinkedIn: Compounding Ignores Zeros">LinkedIn</a>
+        <button type="button" data-copy="https://halberesford.com/curiosities/#exh-002"
+           aria-label="Copy a direct link to this exhibit: Compounding Ignores Zeros">Copy link</button>
+      </p>
+
     </article>
 
     <hr class="rule" />
@@ -424,6 +463,14 @@
       National Weather Service's corrected afternoon report. No matter how trusted the
       source, validation remains a key step toward ensuring data has adequate quality
       before it is used.</p>
+
+      <p class="share">
+        <span class="share-label">Share Exhibit 003</span>
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fhalberesford.com%2Fcuriosities%2F%23exh-003" target="_blank" rel="noopener"
+           aria-label="Share this exhibit on LinkedIn: The Two Summer Minutes Denver Spent in Winter">LinkedIn</a>
+        <button type="button" data-copy="https://halberesford.com/curiosities/#exh-003"
+           aria-label="Copy a direct link to this exhibit: The Two Summer Minutes Denver Spent in Winter">Copy link</button>
+      </p>
 
     </article>
 
@@ -533,6 +580,14 @@
 
       <p>The table isn't the point. The question is: name the constraint first, and most
       of the buying decision makes itself.</p>
+
+      <p class="share">
+        <span class="share-label">Share Exhibit 004</span>
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fhalberesford.com%2Fcuriosities%2F%23exh-004" target="_blank" rel="noopener"
+           aria-label="Share this exhibit on LinkedIn: Name the Constraint Before You Buy the Service">LinkedIn</a>
+        <button type="button" data-copy="https://halberesford.com/curiosities/#exh-004"
+           aria-label="Copy a direct link to this exhibit: Name the Constraint Before You Buy the Service">Copy link</button>
+      </p>
 
     </article>
 
@@ -1006,6 +1061,45 @@
     var spans = document.querySelectorAll(".years");
     for (var i = 0; i < spans.length; i++) spans[i].textContent = "2026\u2013" + y;
   }
+})();
+</script>
+<script>
+/* ════════ share rows — copy a direct link to one exhibit ════════ */
+(function () {
+  var RESET_MS = 1600;
+  function legacyCopy(url) {
+    var ta = document.createElement("textarea");
+    ta.value = url; ta.setAttribute("readonly", "");
+    ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    ta.remove();
+    return ok;
+  }
+  document.querySelectorAll(".share button[data-copy]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var url = btn.getAttribute("data-copy"), label = btn.textContent;
+      function confirmed(ok) {
+        btn.textContent = ok ? "copied" : "copy failed";
+        btn.setAttribute("data-state", "done");
+        setTimeout(function () {
+          btn.textContent = label; btn.removeAttribute("data-state");
+        }, RESET_MS);
+      }
+      /* navigator.clipboard needs a secure context AND permission, and it can
+         reject even where it exists. Every failure path falls through to the
+         textarea method rather than giving up, so the button is never inert. */
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(url).then(
+          function () { confirmed(true); },
+          function () { confirmed(legacyCopy(url)); }
+        );
+        return;
+      }
+      confirmed(legacyCopy(url));
+    });
+  });
 })();
 </script>
 </body>
