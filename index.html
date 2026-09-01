@@ -21,384 +21,382 @@
 <link rel="icon" href="/favicon.ico" sizes="any" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..700,0..100,0..1;1,9..144,400..700,0..100,0..1&amp;family=Public+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" />
 <style>
   :root {
-    --paper:      #f4f6f5;
-    --paper-2:    #eef1f0;
-    --ink:        #16201f;
-    --ink-soft:   #55635f;
-    --line:       #d4dbd8;
-    --accent:     #0c5a5f;
-    --accent-2:   #0a4b50;
-    --font-serif: "Iowan Old Style", "Palatino Linotype", Cambria, Georgia, "Times New Roman", serif;
-    --font-sans:  system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    --font-mono:  ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-    --measure:    38rem;
+    --paper:   #e7edef;   /* slate-tinted paper, biased toward the navy */
+    --paper-2: #f3f7f8;
+    --ink:     #0f2b3d;   /* the avatar navy */
+    --ink-2:   #4e6c7a;
+    --rule:    #bfd0d6;
+    --contour: #6fd3c7;   /* the avatar mint */
+    --contour-dp: #0d6f68;
+    --ochre:   #b4671f;
+    --f-disp:  "Fraunces", "Iowan Old Style", Georgia, serif;
+    --f-body:  "Public Sans", system-ui, "Segoe UI", Helvetica, Arial, sans-serif;
+    --f-mono:  "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
   }
   @media (prefers-color-scheme: dark) {
-    :root {
-      --paper:    #0e1413;
-      --paper-2:  #141c1b;
-      --ink:      #e7ece9;
-      --ink-soft: #90a09b;
-      --line:     #233230;
-      --accent:   #34aeb2;
-      --accent-2: #47c2c6;
+    :root:not([data-theme="light"]) {
+      --paper: #08202e; --paper-2: #0f2b3d; --ink: #e4eef0; --ink-2: #93aeb9;
+      --rule: #23506a; --contour-dp: #6fd3c7; --ochre: #e0994f;
     }
+  }
+  :root[data-theme="dark"] {
+    --paper: #08202e; --paper-2: #0f2b3d; --ink: #e4eef0; --ink-2: #93aeb9;
+    --rule: #23506a; --contour-dp: #6fd3c7; --ochre: #e0994f;
   }
 
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
   body {
-    margin: 0;
-    background: var(--paper);
-    color: var(--ink);
-    font-family: var(--font-sans);
-    font-size: 17px;
-    line-height: 1.65;
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: var(--f-body); font-size: 17px; line-height: 1.68;
     -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
   }
+  a { color: var(--contour-dp); text-underline-offset: 3px; }
+  a:focus-visible { outline: 2px solid var(--contour-dp); outline-offset: 3px; }
 
-  .wrap {
-    max-width: var(--measure);
-    margin: 0 auto;
-    padding: clamp(2.5rem, 8vw, 6rem) 1.5rem clamp(3rem, 6vw, 5rem);
+  /* ── hero: type left, survey map bleeding off the right ─────── */
+  .hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--rule); }
+  .hero canvas {
+    position: absolute; top: 0; right: 0; height: 100%; width: 64%;
+    display: block;
+    -webkit-mask-image: linear-gradient(96deg, transparent 0%, #000 22%, #000 100%);
+            mask-image: linear-gradient(96deg, transparent 0%, #000 22%, #000 100%);
   }
-
-  /* ── shared type ─────────────────────────────────────────────── */
-  .eyebrow {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin: 0 0 1.4rem;
+  .hero-in {
+    position: relative; z-index: 2; max-width: 64rem; margin: 0 auto;
+    padding: clamp(3.25rem, 8vw, 6.5rem) 1.75rem clamp(2.75rem, 6vw, 4.5rem);
   }
+  .survey {
+    font-family: var(--f-mono); font-size: 0.7rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--ink-2); margin: 0 0 1.6rem;
+  }
+  .survey em { font-style: normal; color: var(--contour-dp); }
   h1 {
-    font-family: var(--font-serif);
-    font-weight: 600;
-    font-size: clamp(2rem, 5.4vw, 3.15rem);
-    line-height: 1.08;
-    letter-spacing: -0.012em;
-    text-wrap: balance;
-    margin: 0 0 1.6rem;
+    font-family: var(--f-disp);
+    font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 1;
+    font-weight: 500; font-size: clamp(2.2rem, 5.6vw, 3.9rem);
+    line-height: 1.03; letter-spacing: -0.018em;
+    margin: 0 0 1.5rem; max-width: 15ch; text-wrap: balance;
   }
-  h1 em { font-style: italic; color: var(--accent); }
-  p { margin: 0 0 1.15rem; }
-  .lede { font-size: 1.16rem; color: var(--ink); }
-  .soft { color: var(--ink-soft); }
-  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
-  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
-
-  .rule { height: 1px; background: var(--line); border: 0; margin: clamp(2.5rem, 6vw, 3.75rem) 0; }
-
-  section > .label {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    font-weight: 400;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    margin: 0 0 1.1rem;
+  h1 em { font-style: italic; font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1; color: var(--contour-dp); }
+  .lede { font-size: 1.14rem; max-width: 46ch; margin: 0; color: var(--ink-2); text-wrap: balance; }
+  @media (max-width: 52rem) {
+    .hero canvas { width: 100%; opacity: 0.3; -webkit-mask-image: none; mask-image: none; }
   }
 
-  /* ── calibration motif ───────────────────────────────────────── */
-  .calib {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.9rem;
-    padding: 1.75rem 1rem 1.5rem;
-    background: var(--paper-2);
-    border: 1px solid var(--line);
-    border-radius: 3px;
+  /* ── body: marginal notes in a left gutter ──────────────────── */
+  .doc { max-width: 64rem; margin: 0 auto; padding: 0 1.75rem clamp(3rem, 6vw, 5rem); }
+  .band {
+    display: grid; grid-template-columns: 8.5rem minmax(0, 1fr);
+    gap: 2.75rem; padding: clamp(2.5rem, 5.5vw, 3.5rem) 0;
+    border-bottom: 1px solid var(--rule);
   }
-  .calib canvas { width: 100%; max-width: 340px; height: auto; display: block; }
-  .calib figcaption {
-    font-size: 0.92rem;
-    color: var(--ink-soft);
-    text-align: center;
-    max-width: 30rem;
-    margin: 0;
+  .band:last-of-type { border-bottom: 0; }
+  .marg {
+    font-family: var(--f-mono); font-size: 0.68rem; letter-spacing: 0.13em;
+    text-transform: uppercase; color: var(--ink-2); line-height: 1.7; padding-top: 0.5rem;
   }
-  .calib figcaption b { color: var(--ink); font-weight: 600; }
-  .calib .n { font-family: var(--font-mono); color: var(--accent); font-style: normal; }
+  .marg .no { display: block; color: var(--ochre); }
+  .band > .col > p { margin: 0 0 1.1rem; max-width: 62ch; }
+  .band > .col > p:last-child { margin-bottom: 0; }
+  .col b { font-weight: 600; }
+  .dim { color: var(--ink-2); }
+  @media (max-width: 48rem) {
+    .band { grid-template-columns: 1fr; gap: 0.9rem; }
+    .marg { padding-top: 0; }
+  }
 
-  /* ── pipeline ────────────────────────────────────────────────── */
-  .flow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
-  .step .k {
-    font-family: var(--font-mono);
-    font-size: 0.74rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--accent);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin: 0 0 0.55rem;
-  }
-  .step .k::before { content: ""; width: 0.5rem; height: 0.5rem; background: var(--accent); border-radius: 50%; flex: none; }
-  .step p { font-size: 0.96rem; margin: 0; color: var(--ink-soft); }
-  .step p b { color: var(--ink); font-weight: 600; }
-  @media (max-width: 34rem) { .flow { grid-template-columns: 1fr; gap: 1.35rem; } }
+  /* ── plate ──────────────────────────────────────────────────── */
+  .plate { margin: 0; }
+  .plate .frame { border: 1px solid var(--ink); background: var(--paper-2); padding: 1.4rem; max-width: 34rem; }
+  .plate canvas { width: 100%; height: auto; display: block; }
+  .plate figcaption { margin: 0.85rem 0 0; font-size: 0.95rem; color: var(--ink-2); max-width: 56ch; }
+  .plate figcaption b { color: var(--ink); font-weight: 600; }
+  .plate .pc { font-family: var(--f-mono); color: var(--contour-dp); font-variant-numeric: tabular-nums; }
+  .plate .cav { display: block; margin-top: 0.6rem; font-family: var(--f-mono); font-size: 0.67rem; letter-spacing: 0.11em; text-transform: uppercase; color: var(--ochre); }
 
-  /* ── repo callout ────────────────────────────────────────────── */
-  .repo {
-    background: var(--paper-2);
-    border: 1px solid var(--line);
-    border-left: 3px solid var(--accent);
-    border-radius: 3px;
-    padding: 1.4rem 1.5rem;
+  /* ── stages ─────────────────────────────────────────────────── */
+  .stages { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.9rem; }
+  .stages h3 {
+    font-family: var(--f-disp); font-variation-settings: "opsz" 20, "SOFT" 20;
+    font-weight: 600; font-size: 1.18rem; margin: 0 0 0.15rem; letter-spacing: -0.01em;
   }
-  .repo .code { font-family: var(--font-mono); font-size: 0.95rem; color: var(--ink); font-weight: 600; }
-  .repo p { margin: 0.55rem 0 1rem; color: var(--ink-soft); font-size: 0.98rem; }
-  .repo a.cta {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    font-family: var(--font-mono); font-size: 0.85rem; letter-spacing: 0.03em;
-    text-decoration: none; color: var(--accent); font-weight: 600;
-  }
-  .repo a.cta:hover { color: var(--accent-2); }
-  .repo a.cta .arrow { transition: transform 0.18s ease; }
-  .repo a.cta:hover .arrow { transform: translateX(3px); }
+  .stages .ln { display: block; width: 100%; height: 2px; background: var(--contour); margin-bottom: 0.7rem; }
+  .stages p { margin: 0; font-size: 0.95rem; color: var(--ink-2); }
+  .stages p b { color: var(--ink); font-weight: 600; }
+  @media (max-width: 44rem) { .stages { grid-template-columns: 1fr; gap: 1.4rem; } }
 
-  /* ── contact / footer ────────────────────────────────────────── */
-  .contact { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; font-family: var(--font-mono); font-size: 0.9rem; }
-  .contact a { text-decoration: none; }
-  .contact a:hover { text-decoration: underline; }
-  footer { margin-top: clamp(2.5rem, 6vw, 3.75rem); font-size: 0.8rem; color: var(--ink-soft); }
+  /* ── holdings ───────────────────────────────────────────────── */
+  .hold { display: block; text-decoration: none; color: inherit; padding: 1.15rem 0; border-top: 1px solid var(--rule); }
+  .hold:last-of-type { border-bottom: 1px solid var(--rule); }
+  .hold h3 { font-family: var(--f-mono); font-size: 0.95rem; font-weight: 500; margin: 0 0 0.4rem; color: var(--contour-dp); }
+  .hold p { margin: 0; font-size: 0.95rem; color: var(--ink-2); max-width: 62ch; }
+  .hold p a { color: var(--ink); }
+  .hold .arw { display: inline-block; transition: transform .2s ease; color: var(--ochre); }
+  .hold:hover .arw { transform: translateX(4px); }
+  .hold:hover h3 { text-decoration: underline; }
 
-  /* ── entrance motion ─────────────────────────────────────────── */
-  .rise { opacity: 0; transform: translateY(14px); animation: rise 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) forwards; }
-  .rise:nth-child(2) { animation-delay: 0.06s; }
-  .d1 { animation-delay: 0.10s; } .d2 { animation-delay: 0.18s; } .d3 { animation-delay: 0.26s; }
-  @keyframes rise { to { opacity: 1; transform: none; } }
-  @media (prefers-reduced-motion: reduce) {
-    .rise { animation: none; opacity: 1; transform: none; }
-    a, .repo a.cta .arrow { transition: none; }
-  }
+  .contact { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; font-family: var(--f-mono); font-size: 0.9rem; margin-top: 1.1rem; }
+  footer { border-top: 1px solid var(--rule); }
+  .foot-in { max-width: 64rem; margin: 0 auto; padding: 1.6rem 1.75rem 2.5rem; font-family: var(--f-mono); font-size: 0.68rem; line-height: 1.9; color: var(--ink-2); }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
 </head>
 <body>
-  <main class="wrap">
-    <p class="eyebrow rise">Hal Beresford · Forecasting systems</p>
+  <header class="hero">
+    <canvas id="map" aria-hidden="true"></canvas>
+    <div class="hero-in">
+      <p class="survey">Hal Beresford <em>&middot;</em> Forecasting systems</p>
+      <h1>There's a class of question with a real answer we just don't know <em>yet.</em></h1>
+      <p class="lede">Will some measurable event happen, and by when?</p>
+    </div>
+  </header>
 
-    <h1 class="rise">There's a class of question with a real answer we just don't know <em>yet.</em></h1>
-
-    <p class="lede rise d1">Will some measurable event happen, and by when? Prediction markets let people
-    trade on those questions, and the prices act like a crowd's best guess at the odds.</p>
-
-    <p class="rise d2">For the past nine months I've been building a system that competes in those
-    markets — on <a href="https://kalshi.com">Kalshi</a>, a regulated exchange for event contracts. It gathers
-    public data across a range of domains, turns it into calibrated probabilities, and, where its estimate
-    disagrees with the market's price, places a trade. Then it settles up, scores how it did, and learns
-    from the record.</p>
-
-    <p class="rise d3">It runs by itself: about <b>thirty forecasting pipelines</b> operating unattended on a
-    single server, all day, alerting me only when something breaks. Building it touched everything — data
-    engineering, statistical modelling, live financial execution, and the unglamorous reliability work that
-    keeps an automated system from quietly going wrong.</p>
-
-    <hr class="rule" />
-
-    <section>
-      <figure class="calib" aria-labelledby="calib-cap">
-        <canvas width="680" height="520" role="img"
-          aria-label="An illustrative calibration curve: predicted probabilities plotted against how often events actually happened, hugging the diagonal line of perfect calibration."></canvas>
-        <figcaption id="calib-cap">
-          <b>Honest scorekeeping.</b> When the system says <span class="n">70%</span>, the event should
-          happen about <span class="n">70%</span> of the time. Making the evaluation trustworthy is half
-          the work. <em>(Chart illustrative — the real scorecards stay private.)</em>
-        </figcaption>
-      </figure>
+  <main class="doc">
+    <section class="band">
+      <div class="marg"><span class="no">I.</span>The system</div>
+      <div class="col">
+        <p>For the past nine months I've been building a system that competes in those markets — on <a href="https://kalshi.com">Kalshi</a>, a regulated exchange for event contracts. It gathers public data across a range of domains, turns it into calibrated probabilities, and, where its estimate disagrees with the market's price, places a trade. Then it settles up, scores how it did, and learns from the record.</p>
+        <p>It runs by itself: about <b>thirty forecasting pipelines</b> operating unattended on a single server, all day, alerting me only when something breaks. Building it touched everything — data engineering, statistical modelling, live financial execution, and the unglamorous reliability work that keeps an automated system from quietly going wrong.</p>
+      </div>
     </section>
 
-    <hr class="rule" />
+    <section class="band">
+      <div class="marg"><span class="no">Plate I.</span>Calibration</div>
+      <div class="col">
+        <figure class="plate">
+          <div class="frame">
+            <canvas id="calib" width="600" height="470" role="img" aria-label="An illustrative calibration curve: predicted probabilities plotted against how often events actually happened, hugging the diagonal line of perfect calibration."></canvas>
+          </div>
+          <figcaption>
+            <b>Honest scorekeeping.</b> When the system says <span class="pc">70%</span>, the event should happen about <span class="pc">70%</span> of the time. Making the evaluation trustworthy is half the work.
+            <span class="cav">Chart illustrative &mdash; real scorecards stay private</span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
 
-    <section>
-      <h2 class="label">What it involves</h2>
-      <div class="flow">
-        <div class="step">
-          <p class="k">Gather</p>
-          <p>Public data from many sources, cleaned and made <b>point-in-time honest</b> so a backtest can't peek at the future.</p>
+    <section class="band">
+      <div class="marg"><span class="no">II.</span>What it involves</div>
+      <div class="col">
+        <div class="stages">
+          <div>
+            <span class="ln"></span>
+            <h3>Gather</h3>
+            <p>Public data from many sources, cleaned and made <b>point-in-time honest</b> so a backtest can't peek at the future.</p>
+          </div>
+          <div>
+            <span class="ln"></span>
+            <h3>Forecast</h3>
+            <p>Probabilistic models, <b>calibrated</b> and scored against real outcomes rather than trusted on faith.</p>
+          </div>
+          <div>
+            <span class="ln"></span>
+            <h3>Execute</h3>
+            <p>Live orders placed and reconciled automatically, <b>built to fail safely</b> when something goes wrong.</p>
+          </div>
         </div>
-        <div class="step">
-          <p class="k">Forecast</p>
-          <p>Probabilistic models, <b>calibrated</b> and scored against real outcomes rather than trusted on faith.</p>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="marg"><span class="no">III.</span>Published</div>
+      <div class="col">
+        <a class="hold" href="https://github.com/hbere/kalshi-transport">
+          <h3>kalshi-transport <span class="arw">&rarr;</span></h3>
+          <p>The forecasting stays private — the engineering underneath it is open. An exchange client handling authentication, correct fee math, and crash-safe order submission. A clean, well-tested sample of how I build production systems.</p>
+        </a>
+        <a class="hold" href="/curiosities/">
+          <h3>a cabinet of curiosities <span class="arw">&rarr;</span></h3>
+          <p>Things I've run into along the way that were interesting enough to mount and label — the ladder from a point to a six-dimensional cube, why compounding ignores the size of your fortune, and the June morning a Denver thermometer reported 24.8&deg;F.</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="marg"><span class="no">IV.</span>Get in touch</div>
+      <div class="col">
+        <p class="dim">I'm looking for my next role — finance, AI, analytics, anywhere the job is turning messy real-world data into decisions. If that sounds like your world, I'd love to talk.</p>
+        <div class="contact">
+          <a href="https://www.linkedin.com/in/halberesford">linkedin.com/in/halberesford</a>
+          <a href="https://github.com/hbere">github.com/hbere</a>
         </div>
-        <div class="step">
-          <p class="k">Execute</p>
-          <p>Live orders placed and reconciled automatically, <b>built to fail safely</b> when something goes wrong.</p>
-        </div>
       </div>
     </section>
-
-    <hr class="rule" />
-
-    <section>
-      <h2 class="label">Open source</h2>
-      <div class="repo">
-        <span class="code">kalshi-transport</span>
-        <p>The forecasting itself stays private — but I've open-sourced the engineering underneath it: the
-        exchange client that handles authentication, correct fee math, and crash-safe order submission. A
-        clean, well-tested sample of how I build production systems. It includes
-        <a href="https://github.com/hbere/kalshi-transport/blob/main/docs/backtesting.md">an essay on
-        evaluating a forecasting strategy without fooling yourself</a>.</p>
-        <a class="cta" href="https://github.com/hbere/kalshi-transport">View on GitHub <span class="arrow">&rarr;</span></a>
-      </div>
-    </section>
-
-    <hr class="rule" />
-
-    <section>
-      <h2 class="label">Curiosities</h2>
-      <div class="repo">
-        <span class="code">a cabinet of curiosities</span>
-        <p>Things I've run into along the way that were interesting enough to mount and label —
-        the ladder from a point to a six-dimensional cube, why compounding ignores the size of
-        your fortune, and the June morning a Denver thermometer reported 24.8°F.</p>
-        <a class="cta" href="/curiosities/">View the cabinet <span class="arrow">&rarr;</span></a>
-      </div>
-    </section>
-
-    <hr class="rule" />
-
-    <section>
-      <h2 class="label">Get in touch</h2>
-      <p class="soft" style="margin-bottom:1rem;font-size:0.98rem;">
-        I'm looking for my next role — finance, AI, analytics, anywhere the job is turning messy
-        real-world data into decisions. If that sounds like your world, I'd love to talk.
-      </p>
-      <div class="contact">
-        <a href="https://www.linkedin.com/in/halberesford">linkedin.com/in/halberesford</a>
-        <a href="https://github.com/hbere">github.com/hbere</a>
-      </div>
-    </section>
-
-    <footer>Built and operated solo. Not affiliated with or endorsed by Kalshi.
-    Figures marked illustrative are reconstructions, not records. Views here are my own
-    and not those of any employer. Shared for educational purposes only — nothing on
-    this site is investment advice.<br />
-    © <span class="years">2026</span> Hal Beresford</footer>
   </main>
 
+  <footer>
+    <div class="foot-in">
+      Built and operated solo. Not affiliated with or endorsed by Kalshi. Figures marked illustrative are reconstructions, not records. Views here are my own and not those of any employer. Shared for educational purposes only — nothing on this site is investment advice.<br />
+      &copy; <span class="years">2026</span> Hal Beresford
+    </div>
+  </footer>
+
 <script>
+function tok(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+
+/* Survey map: isolines of a smooth scalar field, traced by marching squares.
+   The avatar's contours, drawn the way a real chart draws them. */
 (function () {
-  var canvas = document.querySelector(".calib canvas");
-  if (!canvas || !canvas.getContext) return;
-  var ctx = canvas.getContext("2d");
+  var c = document.getElementById("map");
+  if (!c || !c.getContext) return;
+  var ctx = c.getContext("2d");
 
-  // Predicted probability (x) vs. observed frequency (y), hugging the diagonal.
-  var pts = [
-    [0.05, 0.04], [0.17, 0.20], [0.31, 0.28], [0.49, 0.53],
-    [0.62, 0.59], [0.77, 0.80], [0.90, 0.87], [0.97, 0.96]
+  var bumps = [
+    [0.30, 0.20,  1.00, 0.22], [0.74, 0.34, -0.95, 0.20],
+    [0.50, 0.72,  0.95, 0.24], [0.10, 0.60, -0.70, 0.19],
+    [0.90, 0.82,  0.85, 0.21], [0.62, 0.04,  0.60, 0.16],
+    [0.20, 0.92, -0.75, 0.18], [0.96, 0.48,  0.65, 0.17]
   ];
+  function field(x, y) {
+    var v = 0;
+    for (var i = 0; i < bumps.length; i++) {
+      var b = bumps[i], dx = x - b[0], dy = y - b[1];
+      v += b[2] * Math.exp(-(dx * dx + dy * dy) / (2 * b[3] * b[3]));
+    }
+    return v + 0.10 * Math.sin(x * 8.3) * Math.cos(y * 6.1);
+  }
 
+  function draw() {
+    var w = c.clientWidth, h = c.clientHeight;
+    if (!w || !h) return;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+
+    var nx = 104, ny = Math.max(56, Math.round(104 * h / w));
+    var g = new Float32Array((nx + 1) * (ny + 1));
+    for (var j = 0; j <= ny; j++)
+      for (var i = 0; i <= nx; i++)
+        g[j * (nx + 1) + i] = field(i / nx, j / ny);
+
+    var cw = w / nx, ch = h / ny;
+    var levels = 24;
+    ctx.lineCap = "round"; ctx.lineJoin = "round";
+    var mint = tok("--contour");
+
+    for (var L = 0; L < levels; L++) {
+      var lv = -0.95 + (1.95 * L) / (levels - 1);
+      var major = L % 4 === 0;
+      ctx.strokeStyle = mint;
+      ctx.globalAlpha = major ? 0.92 : 0.42;
+      ctx.lineWidth = major ? 2.0 : 1.1;
+      ctx.beginPath();
+      for (var jj = 0; jj < ny; jj++) {
+        for (var ii = 0; ii < nx; ii++) {
+          var a = g[jj * (nx + 1) + ii],       b2 = g[jj * (nx + 1) + ii + 1],
+              d = g[(jj + 1) * (nx + 1) + ii + 1], e = g[(jj + 1) * (nx + 1) + ii];
+          var idx = (a > lv ? 8 : 0) | (b2 > lv ? 4 : 0) | (d > lv ? 2 : 0) | (e > lv ? 1 : 0);
+          if (idx === 0 || idx === 15) continue;
+          var x0 = ii * cw, y0 = jj * ch;
+          function lerp(p, q) { return (lv - p) / (q - p || 1e-6); }
+          var T = [x0 + cw * lerp(a, b2), y0];
+          var R = [x0 + cw, y0 + ch * lerp(b2, d)];
+          var B = [x0 + cw * lerp(e, d), y0 + ch];
+          var Lf = [x0, y0 + ch * lerp(a, e)];
+          function seg(p, q) { ctx.moveTo(p[0], p[1]); ctx.lineTo(q[0], q[1]); }
+          switch (idx) {
+            case 1: case 14: seg(Lf, B); break;
+            case 2: case 13: seg(B, R); break;
+            case 3: case 12: seg(Lf, R); break;
+            case 4: case 11: seg(T, R); break;
+            case 6: case 9:  seg(T, B); break;
+            case 7: case 8:  seg(Lf, T); break;
+            case 5:          seg(Lf, T); seg(B, R); break;
+            case 10:         seg(T, R); seg(Lf, B); break;
+          }
+        }
+      }
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  var ro = "ResizeObserver" in window ? new ResizeObserver(draw) : null;
+  if (ro) ro.observe(c); else window.addEventListener("resize", draw);
+  requestAnimationFrame(draw);
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", draw);
+})();
+
+/* Plate I — calibration. */
+(function () {
+  var c = document.getElementById("calib");
+  if (!c || !c.getContext) return;
+  var ctx = c.getContext("2d");
+  var pts = [[0.05,0.04],[0.17,0.20],[0.31,0.28],[0.49,0.53],[0.62,0.59],[0.77,0.80],[0.90,0.87],[0.97,0.96]];
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  function color(name) {
-    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-  }
-
-  function draw(progress) {
-    var cssW = canvas.clientWidth || 340;
-    var cssH = cssW * (canvas.height / canvas.width);
-    var dpr = window.devicePixelRatio || 1;
-    canvas.width = Math.round(cssW * dpr);
-    canvas.height = Math.round(cssH * dpr);
+  function draw(p) {
+    var cssW = c.clientWidth; if (!cssW) return;
+    var cssH = Math.round(cssW * 0.78);
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    c.width = Math.round(cssW * dpr); c.height = Math.round(cssH * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    var ink = color("--ink"), soft = color("--ink-soft"),
-        accent = color("--accent"), line = color("--line");
-
-    var padL = 30, padR = 14, padT = 12, padB = 26;
-    var w = cssW - padL - padR, h = cssH - padT - padB;
-    var X = function (v) { return padL + v * w; };
-    var Y = function (v) { return padT + (1 - v) * h; };
-
     ctx.clearRect(0, 0, cssW, cssH);
+    var ink = tok("--ink"), dim = tok("--ink-2"), rule = tok("--rule"), mint = tok("--contour-dp");
+    var padL = 32, padR = 10, padT = 10, padB = 26;
+    var w = cssW - padL - padR, h = cssH - padT - padB;
+    var X = function (v) { return padL + v * w; }, Y = function (v) { return padT + (1 - v) * h; };
 
-    // frame
-    ctx.strokeStyle = line; ctx.lineWidth = 1;
-    ctx.strokeRect(padL, padT, w, h);
+    ctx.strokeStyle = rule; ctx.lineWidth = 1;
+    for (var g = 0.2; g < 1; g += 0.2) {
+      ctx.beginPath(); ctx.moveTo(X(0), Y(g)); ctx.lineTo(X(1), Y(g)); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(X(g), Y(0)); ctx.lineTo(X(g), Y(1)); ctx.stroke();
+    }
+    ctx.strokeStyle = ink; ctx.lineWidth = 1; ctx.strokeRect(padL, padT, w, h);
+    ctx.save(); ctx.setLineDash([3, 4]); ctx.strokeStyle = dim; ctx.globalAlpha = 0.8;
+    ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(1), Y(1)); ctx.stroke(); ctx.restore();
 
-    // perfect-calibration reference (dashed diagonal)
-    ctx.save();
-    ctx.setLineDash([4, 4]); ctx.strokeStyle = soft; ctx.globalAlpha = 0.7;
-    ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(1), Y(1)); ctx.stroke();
-    ctx.restore();
-
-    // connecting line through the points, revealed by progress
-    var n = pts.length, shown = reduce ? n : progress * n;
-    ctx.strokeStyle = accent; ctx.lineWidth = 1.75; ctx.globalAlpha = 0.55;
+    var n = pts.length, shown = reduce ? n : p * n;
+    ctx.strokeStyle = mint; ctx.lineWidth = 2;
     ctx.beginPath();
-    for (var i = 0; i < n; i++) {
-      if (i > shown) break;
-      var px = X(pts[i][0]), py = Y(pts[i][1]);
-      i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
-    }
+    for (var i = 0; i < n; i++) { if (i > shown) break; var px = X(pts[i][0]), py = Y(pts[i][1]); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
     ctx.stroke();
-    ctx.globalAlpha = 1;
-
-    // points
     for (var j = 0; j < n; j++) {
-      var reveal = reduce ? 1 : Math.max(0, Math.min(1, shown - j));
-      if (reveal <= 0) continue;
-      var last = j === n - 1;
-      ctx.fillStyle = accent;
-      ctx.globalAlpha = reveal;
-      ctx.beginPath();
-      ctx.arc(X(pts[j][0]), Y(pts[j][1]), last ? 5 : 3.4, 0, Math.PI * 2);
-      ctx.fill();
-      if (last) { ctx.strokeStyle = color("--paper"); ctx.lineWidth = 1.5; ctx.stroke(); }
+      var rv = reduce ? 1 : Math.max(0, Math.min(1, shown - j));
+      if (rv <= 0) continue;
+      ctx.globalAlpha = rv; ctx.fillStyle = mint;
+      ctx.beginPath(); ctx.arc(X(pts[j][0]), Y(pts[j][1]), j === n - 1 ? 4.5 : 3, 0, 6.284); ctx.fill();
     }
     ctx.globalAlpha = 1;
-
-    // axis labels
-    ctx.fillStyle = soft;
-    ctx.font = '10px ui-monospace, Menlo, Consolas, monospace';
-    ctx.textAlign = "center";
-    ctx.fillText("predicted", padL + w / 2, cssH - 6);
-    ctx.save();
-    ctx.translate(9, padT + h / 2); ctx.rotate(-Math.PI / 2);
-    ctx.fillText("actual", 0, 0);
-    ctx.restore();
-  }
-
-  function animate() {
-    if (reduce) { draw(1); return; }
-    var start = null, dur = 1100;
-    function frame(t) {
-      if (start === null) start = t;
-      var p = Math.min(1, (t - start) / dur);
-      var eased = 1 - Math.pow(1 - p, 3);
-      draw(eased);
-      if (p < 1) requestAnimationFrame(frame);
-    }
-    requestAnimationFrame(frame);
+    ctx.fillStyle = dim; ctx.font = '10px "IBM Plex Mono", monospace'; ctx.textAlign = "center";
+    ctx.fillText("predicted", padL + w / 2, cssH - 5);
+    ctx.save(); ctx.translate(10, padT + h / 2); ctx.rotate(-Math.PI / 2); ctx.fillText("actual", 0, 0); ctx.restore();
   }
 
   var ran = false;
-  function maybeRun() {
-    if (ran) return; ran = true; animate();
+  function run() {
+    if (ran) return; ran = true;
+    if (reduce) { draw(1); return; }
+    var s = null;
+    requestAnimationFrame(function f(ts) {
+      if (s === null) s = ts;
+      var p = Math.min(1, (ts - s) / 1000);
+      draw(1 - Math.pow(1 - p, 3));
+      if (p < 1) requestAnimationFrame(f);
+    });
   }
-
-  // Draw when scrolled into view (or immediately if already visible).
   if ("IntersectionObserver" in window) {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) { if (e.isIntersecting) { maybeRun(); io.disconnect(); } });
-    }, { threshold: 0.35 });
-    io.observe(canvas);
-  } else {
-    maybeRun();
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { run(); io.disconnect(); } }); }, { threshold: 0.3 });
+    io.observe(c);
+  } else { run(); }
+  // The canvas is sized by its column, which reflows when the webfont lands —
+  // watch the element, not just the window, or the plot keeps a stale scale.
+  var lastW = 0;
+  if ("ResizeObserver" in window) {
+    new ResizeObserver(function () {
+      if (c.clientWidth && c.clientWidth !== lastW) { lastW = c.clientWidth; if (ran) draw(1); }
+    }).observe(c);
   }
-
-  // Redraw on resize and on light/dark change so it always matches the theme.
-  var rt;
-  window.addEventListener("resize", function () {
-    clearTimeout(rt); rt = setTimeout(function () { draw(1); }, 120);
-  });
+  var rt; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(function () { draw(1); }, 120); });
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () { draw(1); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (ran) draw(1); });
 })();
 </script>
 <script>
@@ -412,6 +410,7 @@
     for (var i = 0; i < spans.length; i++) spans[i].textContent = "2026\u2013" + y;
   }
 })();
+</script>
 </script>
 </body>
 </html>

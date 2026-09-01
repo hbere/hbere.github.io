@@ -21,37 +21,40 @@
 <link rel="icon" href="/favicon.ico" sizes="any" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..700,0..100,0..1;1,9..144,400..700,0..100,0..1&amp;family=Public+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" />
 <style>
   :root {
-    --paper:      #f4f6f5;
-    --paper-2:    #eef1f0;
-    --ink:        #16201f;
-    --ink-soft:   #55635f;
-    --line:       #d4dbd8;
-    --accent:     #0c5a5f;
-    --accent-2:   #0a4b50;
-    --series-1:   #0c5a5f;
-    --series-2:   #b5610a;
-    --flag:       #b3261e;
-    --grid:       #dfe5e3;
-    --font-serif: "Iowan Old Style", "Palatino Linotype", Cambria, Georgia, "Times New Roman", serif;
-    --font-sans:  system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    --font-mono:  ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    --paper:      #e7edef;
+    --paper-2:    #f3f7f8;
+    --ink:        #0f2b3d;
+    --ink-soft:   #4e6c7a;
+    --line:       #bfd0d6;
+    --accent:     #0d6f68;
+    --accent-2:   #0b5b55;
+    --series-1:   #0d6f68;
+    --series-2:   #b4671f;
+    --flag:       #a8332a;
+    --grid:       #d3e0e5;
+    --font-serif: "Fraunces", "Iowan Old Style", Georgia, serif;
+    --font-sans:  "Public Sans", system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    --font-mono:  "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
     --measure:    38rem;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --paper:    #0e1413;
-      --paper-2:  #141c1b;
-      --ink:      #e7ece9;
-      --ink-soft: #90a09b;
-      --line:     #233230;
-      --accent:   #34aeb2;
-      --accent-2: #47c2c6;
-      --series-1: #34aeb2;
-      --series-2: #e0913a;
-      --flag:     #f2777a;
-      --grid:     #1e2c2a;
+      --paper:    #08202e;
+      --paper-2:  #0f2b3d;
+      --ink:      #e4eef0;
+      --ink-soft: #93aeb9;
+      --line:     #23506a;
+      --accent:   #6fd3c7;
+      --accent-2: #8ee0d6;
+      --series-1: #6fd3c7;
+      --series-2: #e0994f;
+      --flag:     #f2867a;
+      --grid:     #12384c;
     }
   }
 
@@ -93,7 +96,8 @@
 
   h1 {
     font-family: var(--font-serif);
-    font-weight: 600;
+    font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 1;
+    font-weight: 500;
     font-size: clamp(2rem, 5.4vw, 3.15rem);
     line-height: 1.08;
     letter-spacing: -0.012em;
@@ -115,6 +119,7 @@
   }
   .exhibit h2 {
     font-family: var(--font-serif);
+    font-variation-settings: "opsz" 40, "SOFT" 20, "WONK" 1;
     font-weight: 600;
     font-size: clamp(1.45rem, 3.6vw, 1.95rem);
     line-height: 1.16;
