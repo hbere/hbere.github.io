@@ -147,3 +147,6 @@
     .facts li:has(> .k) { display: block; }
     .facts .k { display: block; min-width: 0; margin-bottom: 0.1rem; padding-top: 0; }
   }
+  /* One item per line inside a labelled fact (the degrees on the hub). */
+  .facts .lines > span { display: block; }
+  .facts .lines > span + span { margin-top: 0.3rem; }
