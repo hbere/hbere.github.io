@@ -4,11 +4,11 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Hal Beresford · Forecast check</title>
-<meta name="description" content="Paste your forecasts and what actually happened. You’ll get an honest scorecard: bias, accuracy, and calibration." />
+<meta name="description" content="Paste your forecasts and what actually happened. You’ll get an honest scorecard: bias, accuracy, and calibration. Runs entirely in your browser." />
 <link rel="canonical" href="https://halberesford.com/forecast-check/" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Hal Beresford · Forecast check" />
-<meta property="og:description" content="Paste your forecasts and what actually happened. You’ll get an honest scorecard: bias, accuracy, and calibration." />
+<meta property="og:description" content="Paste your forecasts and what actually happened. You’ll get an honest scorecard: bias, accuracy, and calibration. Runs entirely in your browser." />
 <meta property="og:url" content="https://halberesford.com/forecast-check/" />
 <meta property="og:site_name" content="Hal Beresford" />
 <meta property="og:image" content="https://halberesford.com/forecast-check/og.png?v=1" />
@@ -17,7 +17,7 @@
 <meta property="og:image:alt" content="Hal Beresford — forecast check, set over a faint field of contour lines." />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Hal Beresford · Forecast check" />
-<meta name="twitter:description" content="Paste your forecasts and what actually happened. You’ll get an honest scorecard: bias, accuracy, and calibration." />
+<meta name="twitter:description" content="Paste your forecasts and what actually happened. You’ll get an honest scorecard: bias, accuracy, and calibration. Runs entirely in your browser." />
 <link rel="icon" href="/favicon.ico" sizes="any" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -255,7 +255,7 @@ h2.marg{margin:0;font-weight:400}
     return lines.join('\n');
   }
   var SAMPLE = {
-    amounts: { note: 'You’re looking at made-up sample data: 24 months of revenue forecasts, in thousands.', text: sampleAmounts },
+    amounts: { note: 'You’re looking at made-up sample data: 24 months of revenue forecasts in thousands.', text: sampleAmounts },
     probs: { note: 'You’re looking at made-up sample data: 40 forecasts of whether a deal would close.', text: sampleProbs }
   };
   var HELP = {
@@ -470,7 +470,7 @@ h2.marg{margin:0;font-weight:400}
       var label = map.label >= 0 && r[map.label] ? r[map.label] : 'Row ' + (i + 1);
       items.push({ label: label, f: f, a: a, e: f - a, pe: a !== 0 ? (f - a) / Math.abs(a) : null });
     });
-    if (items.length < 3) return { error: 'I need at least 3 rows with both a forecast and an actual.' + (skipped ? ' ' + skipped + ' rows had something other than a number.' : '') };
+    if (items.length < 3) return { error: 'I need at least 3 rows with both a forecast and an actual.' + (skipped ? ' ' + skipped + (skipped === 1 ? ' row had' : ' rows had') + ' something other than a number.' : '') };
     var sumAbsA = 0, sumE = 0, sumAbsE = 0;
     items.forEach(function (d) { sumAbsA += Math.abs(d.a); sumE += d.e; sumAbsE += Math.abs(d.e); });
     var pctItems = items.filter(function (d) { return d.pe !== null; });
@@ -497,16 +497,15 @@ h2.marg{margin:0;font-weight:400}
       var w = pi.slice(-Math.min(12, pi.length)), wn = w.length;
       var under = w.filter(function (d) { return d.pe < 0; }), over = w.filter(function (d) { return d.pe > 0; });
       var span = (wn === pi.length ? 'the ' : 'the last ') + wn + ' ' + unit;
-      var across = (wn === pi.length ? 'all ' : 'the last ') + wn + ' ' + unit;
       var avg = function (arr) { return arr.reduce(function (s, d) { return s + Math.abs(d.pe); }, 0) / arr.length; };
       if (wn < 6) {
-        out.push('With only ' + wn + ' ' + unit + ', it’s too early to call a lean: ' + over.length + ' came in high and ' + under.length + ' came in low.');
+        out.push('With only ' + wn + ' ' + unit + ' it’s too early to call a lean: ' + over.length + ' came in high and ' + under.length + ' came in low.');
       } else if (under.length >= Math.ceil(wn * 2 / 3)) {
         out.push('You forecast too low in ' + under.length + ' of ' + span + ' by an average of ' + pct1(avg(under)) + '.');
       } else if (over.length >= Math.ceil(wn * 2 / 3)) {
         out.push('You forecast too high in ' + over.length + ' of ' + span + ' by an average of ' + pct1(avg(over)) + '.');
       } else {
-        out.push('No steady lean: across ' + across + ', ' + over.length + ' forecasts came in high and ' + under.length + ' came in low.');
+        out.push('No steady lean: ' + over.length + ' of ' + (wn === pi.length ? 'the ' : 'the last ') + wn + ' forecasts came in high and ' + under.length + ' came in low.');
       }
       var tolTxt = (r.tol * 100).toFixed(r.tol * 100 % 1 ? 1 : 0);
       var hitLine = r.hits + ' of ' + pi.length + ' forecasts landed within ±' + tolTxt + '% of actual (' + Math.round(r.hits / pi.length * 100) + '%).';
@@ -548,7 +547,7 @@ h2.marg{margin:0;font-weight:400}
       if (v < 0 || v > 1) { skipped++; return; }
       items.push({ label: d.label, p: v, o: d.o, se: (v - d.o) * (v - d.o) });
     });
-    if (items.length < 5) return { error: 'I need at least 5 rows with a probability and a yes or no.' + (skipped ? ' ' + skipped + ' rows couldn’t be read.' : '') };
+    if (items.length < 5) return { error: 'I need at least 5 rows with a probability and a yes or no.' + (skipped ? ' ' + skipped + (skipped === 1 ? ' row' : ' rows') + ' couldn’t be read.' : '') };
     var n = items.length;
     var brier = items.reduce(function (s, d) { return s + d.se; }, 0) / n;
     var yes = items.filter(function (d) { return d.o === 1; }).length;
@@ -590,8 +589,8 @@ h2.marg{margin:0;font-weight:400}
     var hg = hi.length >= 3 ? gap(hi) : null, lg = lo.length >= 3 ? gap(lo) : null;
     var hd = hg === null ? 0 : hg < -t ? -1 : hg > t ? 1 : 0;
     var ld = lg === null ? 0 : lg < -t ? -1 : lg > t ? 1 : 0;
-    if (hd === -1 && ld === -1) out.push('Your probabilities run high: events happened less often than forecast, on both your likely and your unlikely calls.');
-    else if (hd === 1 && ld === 1) out.push('Your probabilities run low: events happened more often than forecast, on both your likely and your unlikely calls.');
+    if (hd === -1 && ld === -1) out.push('Your probabilities run high: events happened less often than forecast on both your likely and your unlikely calls.');
+    else if (hd === 1 && ld === 1) out.push('Your probabilities run low: events happened more often than forecast on both your likely and your unlikely calls.');
     else if (hd === -1 && ld === 1) out.push('You’re overconfident: your likely calls come true less often than you say, and your unlikely ones more often.');
     else if (hd === 1 && ld === -1) out.push('You could be bolder: your likely calls come true even more often than you say, and your unlikely ones less often.');
     else if (hd === -1) out.push('Your likely calls come true less often than you say.');
@@ -631,12 +630,12 @@ h2.marg{margin:0;font-weight:400}
       var m = r.pctItems.length;
       var tolTxt = (r.tol * 100).toFixed(r.tol * 100 % 1 ? 1 : 0);
       box.appendChild(tile('On target', m ? r.hits + ' of ' + m : '—', m ? 'within ±' + tolTxt + '% (' + Math.round(r.hits / m * 100) + '%)' : ''));
-      box.appendChild(tile('Forecasts scored', String(r.items.length), r.skipped ? r.skipped + ' rows skipped' : 'all rows used'));
+      box.appendChild(tile('Forecasts scored', String(r.items.length), r.skipped ? r.skipped + (r.skipped === 1 ? ' row skipped' : ' rows skipped') : 'all rows used'));
     } else {
       box.appendChild(tile('Brier score', r.brier.toFixed(3), '0 is perfect; 0.25 is a coin flip'));
       box.appendChild(tile('Skill', r.skill === null ? '—' : (r.skill > 0 ? '+' : r.skill < 0 ? '−' : '') + Math.round(Math.abs(r.skill) * 100) + '%', 'vs. always saying ' + Math.round(r.base * 100) + '%'));
       box.appendChild(tile('Happened', Math.round(r.base * 100) + '%', r.yes + ' of ' + r.items.length + ' came true'));
-      box.appendChild(tile('Forecasts scored', String(r.items.length), r.skipped ? r.skipped + ' rows skipped' : 'all rows used'));
+      box.appendChild(tile('Forecasts scored', String(r.items.length), r.skipped ? r.skipped + (r.skipped === 1 ? ' row skipped' : ' rows skipped') : 'all rows used'));
     }
   }
   function renderTable(r) {
@@ -771,7 +770,7 @@ h2.marg{margin:0;font-weight:400}
     if (!pts.length) return;
     var tolPct = r.tol * 100;
     var tolTxt = tolPct.toFixed(tolPct % 1 ? 1 : 0);
-    var ui = makeBox(parent, 'Miss by row, as a share of actual',
+    var ui = makeBox(parent, 'Miss by row as a share of actual',
       [{ label: 'Within ±' + tolTxt + '%', color: 'var(--bar-muted)', box: true }, { label: 'Outside it', color: 'var(--s2)', box: true }],
       'Bars below zero are forecasts that came in low. The shaded band is your tolerance.' + (r.pctItems.length > MAXBARS ? ' Showing the last ' + MAXBARS + ' rows.' : ''));
     var W = Math.max(300, Math.round(ui.holder.clientWidth || 700)), narrow = W < 480, H = narrow ? 200 : 230;
@@ -797,7 +796,7 @@ h2.marg{margin:0;font-weight:400}
       var v = d.pe * 100, y0 = Y(Math.max(v, 0)), y1 = Y(Math.min(v, 0)), out = Math.abs(d.pe) > r.tol + 1e-12;
       el('rect', { x: X(i) - bw / 2, y: y0, width: bw, height: Math.max(1, y1 - y0), rx: Math.min(2, bw / 4), 'class': out ? 'bar-out' : 'bar-in' }, svg);
       var hb = el('rect', { x: m.l + slot * i, y: m.t, width: slot, height: ph, 'class': 'bar-hit' }, svg);
-      var show = function () { showTip(ui, svg, W, X(i), Math.min(y0, Y(0)), [d.label, 'Miss ' + signedPct(d.pe) + (out ? ', outside' : ', within') + ' ±' + tolTxt + '%']); };
+      var show = function () { showTip(ui, svg, W, X(i), Math.min(y0, Y(0)), [d.label, 'Miss ' + signedPct(d.pe) + (out ? ' (outside' : ' (within') + ' ±' + tolTxt + '%)']); };
       hb.addEventListener('pointerenter', show); hb.addEventListener('pointerdown', show); hb.addEventListener('pointerleave', function () { hideTip(ui); });
     });
   }
@@ -805,7 +804,7 @@ h2.marg{margin:0;font-weight:400}
   function calibrationChart(parent, r) {
     var bins = r.bins.filter(function (b) { return b.n > 0; });
     var ui = makeBox(parent, 'Calibration: what you said vs. how often it happened',
-      [{ label: 'Your forecasts, by 10-point band', color: 'var(--s1)', box: true, dot: true }, { label: 'Perfect calibration', color: 'var(--ink-3)', dash: true }],
+      [{ label: 'Your forecasts by 10-point band', color: 'var(--s1)', box: true, dot: true }, { label: 'Perfect calibration', color: 'var(--ink-3)', dash: true }],
       'Bigger dots hold more forecasts. Dots below the dashed line mean things happened less often than you said.');
     var W = Math.max(300, Math.round(ui.holder.clientWidth || 700)), narrow = W < 480, H = narrow ? 280 : 330;
     var m = { t: 12, r: 20, b: 46, l: narrow ? 52 : 64 };
@@ -854,7 +853,7 @@ h2.marg{margin:0;font-weight:400}
   // ---------- flow ----------
   function run(keepMapping) {
     var text = $('data').value;
-    if (!text.trim()) { setMsg('Paste some numbers first, or try the sample.', true); $('results').hidden = true; $('mapping').hidden = true; return; }
+    if (!text.trim()) { setMsg('Paste some numbers first or try the sample.', true); $('results').hidden = true; $('mapping').hidden = true; return; }
     if (!keepMapping || state.parsedText !== text || !state.parsed) {
       state.parsed = parseInput();
       state.parsedText = text;
@@ -865,7 +864,7 @@ h2.marg{margin:0;font-weight:400}
     var tol = Math.max(0, num($('tol').value) || 0) / 100;
     var r = state.mode === 'amounts' ? scoreAmounts(state.parsed, state.map, tol) : scoreProbs(state.parsed, state.map);
     if (r.error) { setMsg(r.error, true); $('results').hidden = true; return; }
-    setMsg('Scored ' + r.items.length + ' forecasts' + (r.skipped ? '; skipped ' + r.skipped + ' rows I couldn’t read.' : '.'), false);
+    setMsg('Scored ' + r.items.length + ' forecasts' + (r.skipped ? '; skipped ' + r.skipped + (r.skipped === 1 ? ' row' : ' rows') + ' I couldn’t read.' : '.'), false);
     state.last = r;
     render(r);
   }
