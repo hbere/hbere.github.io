@@ -589,15 +589,16 @@ h2.marg{margin:0;font-weight:400}
     var hg = hi.length >= 3 ? gap(hi) : null, lg = lo.length >= 3 ? gap(lo) : null;
     var hd = hg === null ? 0 : hg < -t ? -1 : hg > t ? 1 : 0;
     var ld = lg === null ? 0 : lg < -t ? -1 : lg > t ? 1 : 0;
-    if (hd === -1 && ld === -1) out.push('Your probabilities run high: events happened less often than forecast on both your likely and your unlikely calls.');
-    else if (hd === 1 && ld === 1) out.push('Your probabilities run low: events happened more often than forecast on both your likely and your unlikely calls.');
-    else if (hd === -1 && ld === 1) out.push('You’re overconfident: your likely calls come true less often than you say, and your unlikely ones more often.');
-    else if (hd === 1 && ld === -1) out.push('You could be bolder: your likely calls come true even more often than you say, and your unlikely ones less often.');
-    else if (hd === -1) out.push('Your likely calls come true less often than you say.');
-    else if (hd === 1) out.push('Your likely calls come true more often than you say, so you could commit harder.');
-    else if (ld === 1) out.push('Your unlikely calls happen more often than you say.');
-    else if (ld === -1) out.push('Your unlikely calls happen even less often than you say, so you could go lower.');
-    else if (hg !== null && lg !== null) out.push('No overall lean: your likely and unlikely calls both come true about as often as you say.');
+    // A finding can lead with a short bold label; renderFindings bolds it and Copy keeps it as plain text.
+    if (hd === -1 && ld === -1) out.push({ label: 'Forecasts run high.', text: 'Events happened less often than you said on both likely and unlikely calls.' });
+    else if (hd === 1 && ld === 1) out.push({ label: 'Forecasts run low.', text: 'Events happened more often than you said on both likely and unlikely calls.' });
+    else if (hd === -1 && ld === 1) out.push({ label: 'You’re overconfident.', text: 'Your likely calls come true less often than you say, and your unlikely ones more often.' });
+    else if (hd === 1 && ld === -1) out.push({ label: 'You’re underconfident.', text: 'Your likely calls come true more often than you say, and your unlikely ones less often.' });
+    else if (hd === -1) out.push({ label: 'Likely calls run high.', text: 'They come true less often than you say.' });
+    else if (hd === 1) out.push({ label: 'Likely calls run low.', text: 'They come true more often than you say, so you could commit harder.' });
+    else if (ld === 1) out.push({ label: 'Unlikely calls run low.', text: 'They happen more often than you say.' });
+    else if (ld === -1) out.push({ label: 'Unlikely calls run high.', text: 'They happen even less often than you say, so you could go lower.' });
+    else if (hg !== null && lg !== null) out.push({ label: 'Forecasts are balanced.', text: 'Your likely and unlikely calls both come true about as often as you say.' });
     return out;
   }
 
@@ -658,7 +659,12 @@ h2.marg{margin:0;font-weight:400}
   }
   function renderFindings(r) {
     var ul = $('findings'); ul.textContent = '';
-    r.findings.forEach(function (f) { var li = document.createElement('li'); li.textContent = f; ul.appendChild(li); });
+    r.findings.forEach(function (f) {
+      var li = document.createElement('li');
+      if (typeof f === 'string') li.textContent = f;
+      else { var b = document.createElement('b'); b.textContent = f.label; li.appendChild(b); li.appendChild(document.createTextNode(' ' + f.text)); }
+      ul.appendChild(li);
+    });
   }
 
   // ---------- charts ----------
@@ -902,7 +908,7 @@ h2.marg{margin:0;font-weight:400}
   });
   $('copy').addEventListener('click', function () {
     if (!state.last) return;
-    var text = state.last.findings.map(function (f) { return '• ' + f; }).join('\n');
+    var text = state.last.findings.map(function (f) { return '• ' + (typeof f === 'string' ? f : f.label + ' ' + f.text); }).join('\n');
     var btn = $('copy');
     var say = function (ok) {
       btn.textContent = ok ? 'Copied' : 'Couldn’t copy. Select the text instead.';
