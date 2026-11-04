@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://halberesford.com/sitemap.xml

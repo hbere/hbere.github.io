@@ -4,11 +4,11 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Hal Beresford · Forecast check</title>
-<meta name="description" content="Paste your forecasts and what actually happened, and get an honest scorecard: bias, accuracy, and calibration. Runs entirely in your browser." />
+<meta name="description" content="Paste your forecasts and what actually happened. You’ll get an honest scorecard: bias, accuracy, and calibration." />
 <link rel="canonical" href="https://halberesford.com/forecast-check/" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Hal Beresford · Forecast check" />
-<meta property="og:description" content="Paste your forecasts and what actually happened, and get an honest scorecard: bias, accuracy, and calibration. Runs entirely in your browser." />
+<meta property="og:description" content="Paste your forecasts and what actually happened. You’ll get an honest scorecard: bias, accuracy, and calibration." />
 <meta property="og:url" content="https://halberesford.com/forecast-check/" />
 <meta property="og:site_name" content="Hal Beresford" />
 <meta property="og:image" content="https://halberesford.com/forecast-check/og.png?v=1" />
@@ -17,7 +17,7 @@
 <meta property="og:image:alt" content="Hal Beresford — forecast check, set over a faint field of contour lines." />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Hal Beresford · Forecast check" />
-<meta name="twitter:description" content="Paste your forecasts and what actually happened, and get an honest scorecard: bias, accuracy, and calibration. Runs entirely in your browser." />
+<meta name="twitter:description" content="Paste your forecasts and what actually happened. You’ll get an honest scorecard: bias, accuracy, and calibration." />
 <link rel="icon" href="/favicon.ico" sizes="any" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -128,7 +128,7 @@ h2.marg{margin:0;font-weight:400}
     <div class="hero-in">
       <p class="survey"><a href="/" class="home">Hal Beresford</a> <em>&middot;</em> <a href="/forecasting/" class="home">Finance &amp; forecasting</a></p>
       <h1>Forecast <em>check</em></h1>
-      <p class="lede">Paste your forecasts and what actually happened, and get an honest scorecard: bias, accuracy, and calibration.</p>
+      <p class="lede">Paste your forecasts and what actually happened. You’ll get an honest scorecard: bias, accuracy, and calibration.</p>
     </div>
   </header>
 
@@ -502,9 +502,9 @@ h2.marg{margin:0;font-weight:400}
       if (wn < 6) {
         out.push('With only ' + wn + ' ' + unit + ', it’s too early to call a lean: ' + over.length + ' came in high and ' + under.length + ' came in low.');
       } else if (under.length >= Math.ceil(wn * 2 / 3)) {
-        out.push('You forecast too low in ' + under.length + ' of ' + span + ', by an average of ' + pct1(avg(under)) + '.');
+        out.push('You forecast too low in ' + under.length + ' of ' + span + ' by an average of ' + pct1(avg(under)) + '.');
       } else if (over.length >= Math.ceil(wn * 2 / 3)) {
-        out.push('You forecast too high in ' + over.length + ' of ' + span + ', by an average of ' + pct1(avg(over)) + '.');
+        out.push('You forecast too high in ' + over.length + ' of ' + span + ' by an average of ' + pct1(avg(over)) + '.');
       } else {
         out.push('No steady lean: across ' + across + ', ' + over.length + ' forecasts came in high and ' + under.length + ' came in low.');
       }
@@ -627,7 +627,7 @@ h2.marg{margin:0;font-weight:400}
     if (r.mode === 'amounts') {
       var leanTxt = r.bias === null ? 'no actuals to compare' : Math.abs(r.bias) < 0.005 ? 'no real lean' : r.bias < 0 ? 'forecasts ran low' : 'forecasts ran high';
       box.appendChild(tile('Bias', r.bias === null ? '—' : signedPct(r.bias), leanTxt));
-      box.appendChild(tile('Average miss', r.wape === null ? '—' : (r.wape * 100).toFixed(1) + '%', 'of actuals, weighted'));
+      box.appendChild(tile('Average miss', r.wape === null ? '—' : (r.wape * 100).toFixed(1) + '%', 'of total actuals'));
       var m = r.pctItems.length;
       var tolTxt = (r.tol * 100).toFixed(r.tol * 100 % 1 ? 1 : 0);
       box.appendChild(tile('On target', m ? r.hits + ' of ' + m : '—', m ? 'within ±' + tolTxt + '% (' + Math.round(r.hits / m * 100) + '%)' : ''));
