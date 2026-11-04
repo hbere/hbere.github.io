@@ -161,3 +161,12 @@
   .door .also { position: relative; z-index: 1; margin-top: 0.75rem; font-size: 0.9rem; }
   .door .also a { color: var(--contour-dp); }
   .door:focus-within { border-color: var(--contour-dp); }
+
+  /* Phones: a 44px+ tap target for the card links without moving them (the
+     negative margin cancels the padding in the layout), and for contact links
+     (their rows step from 32px to 48px apart, so taps never overlap). */
+  @media (max-width: 40rem) {
+    .door .also a { display: inline-block; padding: 12px 0; margin: -12px 0; }
+    .contact { row-gap: 0; }
+    .contact a { display: inline-block; padding: 12px 0; }
+  }

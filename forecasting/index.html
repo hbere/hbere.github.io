@@ -146,6 +146,11 @@
   .hold:hover h3 { text-decoration: underline; }
 
   .contact { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; font-family: var(--f-mono); font-size: 0.9rem; margin-top: 1.1rem; }
+  /* Phones: a 44px+ tap target for each contact link (rows step from 32px to 48px). */
+  @media (max-width: 40rem) {
+    .contact { row-gap: 0; }
+    .contact a { display: inline-block; padding: 12px 0; }
+  }
   footer { border-top: 1px solid var(--rule); }
   .foot-in { max-width: 64rem; margin: 0 auto; padding: 1.6rem 1.75rem 2.5rem; font-family: var(--f-mono); font-size: 0.68rem; line-height: 1.9; color: var(--ink-2); }
   @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
