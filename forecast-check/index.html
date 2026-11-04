@@ -1,0 +1,940 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Hal Beresford · Forecast check</title>
+<meta name="description" content="Paste your forecasts and what actually happened, and get an honest scorecard: bias, accuracy, and calibration. Runs entirely in your browser." />
+<link rel="canonical" href="https://halberesford.com/forecast-check/" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Hal Beresford · Forecast check" />
+<meta property="og:description" content="Paste your forecasts and what actually happened, and get an honest scorecard: bias, accuracy, and calibration. Runs entirely in your browser." />
+<meta property="og:url" content="https://halberesford.com/forecast-check/" />
+<meta property="og:site_name" content="Hal Beresford" />
+<meta property="og:image" content="https://halberesford.com/forecast-check/og.png?v=1" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Hal Beresford — forecast check, set over a faint field of contour lines." />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Hal Beresford · Forecast check" />
+<meta name="twitter:description" content="Paste your forecasts and what actually happened, and get an honest scorecard: bias, accuracy, and calibration. Runs entirely in your browser." />
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400..700,0..100,0..1;1,9..144,400..700,0..100,0..1&amp;family=Public+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" />
+<link rel="stylesheet" href="/site.css?v=5" />
+<style>
+:root{
+  /* The tool's own tokens, mapped onto the site palette in site.css. Chart
+     colours stay their own: blue = actual, orange = forecast. */
+  --bg:var(--paper); --surface:var(--paper-2); --ink-3:var(--ink-2);
+  --grid:color-mix(in srgb, var(--rule) 55%, transparent); --band:color-mix(in srgb, var(--rule) 45%, transparent);
+  --accent:var(--contour-dp); --on-accent:#ffffff;
+  --s1:#2a78d6; --s2:#eb6834; --bar-muted:#b7c6cb;
+  --tip-bg:var(--ink); --tip-ink:var(--paper); --focus:var(--contour-dp); --note-bg:var(--paper-2);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --s1:#4f97ec; --s2:#ef7a45; --bar-muted:#3b6176; --on-accent:#08202e; }
+}
+:root[data-theme="dark"]{ --s1:#4f97ec; --s2:#ef7a45; --bar-muted:#3b6176; --on-accent:#08202e; }
+*{box-sizing:border-box}
+[hidden]{display:none !important}
+html{-webkit-text-size-adjust:100%}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+fieldset.modes{border:0;padding:0;margin:0 0 12px;display:flex;flex-wrap:wrap;gap:8px}
+fieldset.modes legend{font-weight:600;margin-bottom:8px;padding:0}
+.modes label{display:flex;align-items:center;gap:8px;border:1px solid var(--rule);border-radius:8px;padding:8px 12px;cursor:pointer;background:var(--surface)}
+.modes label:has(input:checked){border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.modes .hint{color:var(--ink-3);font-size:14px}
+.help{color:var(--ink-2);font-size:15px;margin:4px 0 8px}
+textarea{width:100%;min-height:200px;padding:12px;border:1px solid var(--rule);border-radius:8px;background:var(--surface);color:var(--ink);font:14px/1.5 var(--f-mono);resize:vertical}
+textarea:focus,button:focus-visible,input:focus-visible,select:focus-visible,.filebtn:focus-within{outline:2px solid var(--focus);outline-offset:2px}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px}
+button,.filebtn{font:inherit;font-size:15px;border:1px solid var(--rule);background:var(--surface);color:var(--ink);border-radius:8px;padding:8px 14px;cursor:pointer}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:600}
+button.quiet{border-color:transparent;background:transparent;color:var(--ink-2);padding-left:6px;padding-right:6px}
+.filebtn input{position:absolute;opacity:0;width:1px;height:1px}
+.filebtn{position:relative}
+.nowrap{white-space:nowrap}
+.tol input{width:64px;font:inherit;padding:6px 8px;border:1px solid var(--rule);border-radius:6px;background:var(--surface);color:var(--ink)}
+.mapping{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:16px;padding:12px;border:1px solid var(--rule);border-radius:8px}
+.mapping label{display:block;font-size:14px;color:var(--ink-2);margin-bottom:4px}
+.mapping select{width:100%;font:inherit;font-size:15px;padding:6px 8px;border:1px solid var(--rule);border-radius:6px;background:var(--surface);color:var(--ink)}
+.mapping .cap{grid-column:1/-1;margin:0;font-size:14px;color:var(--ink-2)}
+.msg{min-height:1.5em;margin:12px 0 0;color:var(--ink-2)}
+.msg.err{color:var(--s2);font-weight:600}
+.sample-note{background:var(--note-bg);border-left:3px solid var(--ochre);padding:8px 12px;margin:0 0 16px;font-size:15px}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:620px){.tiles{grid-template-columns:repeat(2,1fr)}}
+.tile{border:1px solid var(--rule);border-radius:8px;padding:12px;background:var(--surface)}
+.tile .k{font-size:13px;color:var(--ink-2)}
+.tile .v{font-size:26px;font-weight:650;line-height:1.2;margin:2px 0;font-variant-numeric:tabular-nums}
+.tile .s{font-size:13px;color:var(--ink-3)}
+.chartbox{position:relative;margin-top:24px}
+.chartbox h3{font-size:15px;font-weight:600;margin:0 0 4px}
+.chartbox .legend{display:flex;flex-wrap:wrap;gap:16px;font-size:13px;color:var(--ink-2);margin:0 0 4px}
+.legend .sw{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.legend .sw.box{height:10px;width:10px;border-radius:2px}
+.legend .sw.dot{border-radius:50%}
+.chartbox .cap{font-size:13px;color:var(--ink-3);margin:4px 0 0}
+svg.chart{display:block;width:100%;height:auto;overflow:visible;touch-action:pan-y}
+svg.chart text{font-family:inherit}
+.grid line{stroke:var(--grid);stroke-width:1}
+.tick{fill:var(--ink-3);font-size:12px}
+.axis-title{fill:var(--ink-2);font-size:12px}
+.ln{fill:none;stroke-width:2px;stroke-linejoin:round;stroke-linecap:round}
+.ln-a{stroke:var(--s1)} .ln-f{stroke:var(--s2)}
+.lbl{font-size:13px;font-weight:600}
+.lbl-a{fill:var(--s1)} .lbl-f{fill:var(--s2)}
+.cross{stroke:var(--ink-3);stroke-width:1;stroke-dasharray:3 3}
+.dot-a{fill:var(--s1);stroke:var(--surface);stroke-width:2}
+.dot-f{fill:var(--s2);stroke:var(--surface);stroke-width:2}
+.tolband{fill:var(--band)}
+.zero{stroke:var(--ink-3);stroke-width:1}
+.bar-in{fill:var(--bar-muted)} .bar-out{fill:var(--s2)}
+.bar-hit{fill:transparent}
+.diag{stroke:var(--ink-3);stroke-width:1;stroke-dasharray:4 4}
+.cal-line{fill:none;stroke:var(--s1);stroke-width:2px;stroke-opacity:.5}
+.pt{fill:var(--s1);stroke:var(--surface);stroke-width:2}
+.pt.on{stroke:var(--ink)}
+.tip{position:absolute;pointer-events:none;background:var(--tip-bg);color:var(--tip-ink);font-size:13px;line-height:1.4;padding:6px 9px;border-radius:6px;white-space:nowrap;transform:translate(-50%,calc(-100% - 10px));z-index:2;display:none}
+.tip b{font-weight:600}
+details{margin-top:24px}
+summary{cursor:pointer;color:var(--ink-2)}
+.tablewrap{overflow-x:auto;margin-top:8px}
+table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{padding:6px 8px;border-bottom:1px solid var(--rule);text-align:right;white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--ink-2);font-weight:600}
+.findings{padding-left:20px;margin:0 0 12px}
+.findings li{margin:0 0 8px}
+.notes dl{margin:0}
+.notes dt{font-weight:600;margin-top:12px}
+.notes dd{margin:2px 0 0;color:var(--ink-2)}
+.cta{margin-top:24px;padding-top:16px;border-top:1px solid var(--rule)}
+.privacy{font-size:14px;color:var(--ink-3)}
+/* fitting the tool into the site's banded layout */
+h2.marg{margin:0;font-weight:400}
+.col > *:first-child{margin-top:0}
+.tool-col{min-width:0}
+.cta{border-top:0;padding-top:0}
+</style>
+</head>
+<body>
+  <header class="hero">
+    <canvas id="map" aria-hidden="true"></canvas>
+    <div class="hero-in">
+      <p class="survey"><a href="/" class="home">Hal Beresford</a> <em>&middot;</em> <a href="/forecasting/" class="home">Finance &amp; forecasting</a></p>
+      <h1>Forecast <em>check</em></h1>
+      <p class="lede">Paste your forecasts and what actually happened, and get an honest scorecard: bias, accuracy, and calibration.</p>
+    </div>
+  </header>
+
+<main class="doc">
+
+  <section class="band" aria-labelledby="h-input">
+    <h2 class="marg" id="h-input"><span class="no">I.</span> Your numbers</h2>
+    <div class="col tool-col">
+    <p class="privacy">Everything runs in your browser. Nothing you paste is sent anywhere or saved.</p>
+    <fieldset class="modes">
+      <legend>What are you scoring?</legend>
+      <label><input type="radio" name="mode" value="amounts" checked> Amounts <span class="hint">revenue, units, or costs</span></label>
+      <label><input type="radio" name="mode" value="probs"> Probabilities <span class="hint">yes-or-no forecasts</span></label>
+    </fieldset>
+    <p id="help" class="help"></p>
+    <label for="data" class="sr-only">Your data</label>
+    <textarea id="data" spellcheck="false" autocomplete="off"></textarea>
+    <div class="row">
+      <button id="score" class="primary" type="button">Score it</button>
+      <button id="sample" type="button">Try the sample</button>
+      <label class="filebtn"><input id="file" type="file" accept=".csv,.tsv,.txt,text/csv,text/plain">Upload a CSV</label>
+      <button id="clear" class="quiet" type="button">Clear</button>
+    </div>
+    <div id="tolRow" class="row tol">
+      <label for="tol">On target: within ±</label>
+      <span class="nowrap"><input id="tol" type="number" min="0" max="100" step="0.5" value="3" inputmode="decimal"> % of actual</span>
+    </div>
+    <div id="mapping" class="mapping" hidden></div>
+    <p id="msg" class="msg" role="status" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <div id="results" hidden>
+  <section class="band" aria-labelledby="h-score">
+    <h2 class="marg" id="h-score"><span class="no">II.</span> Scorecard</h2>
+    <div class="col tool-col">
+    <p id="sampleNote" class="sample-note" hidden></p>
+    <div id="tiles" class="tiles"></div>
+    <div id="charts"></div>
+    <details id="rowsBox"><summary>Show the rows</summary><div id="rowsTable" class="tablewrap"></div></details>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="h-find">
+    <h2 class="marg" id="h-find"><span class="no">III.</span> What it says</h2>
+    <div class="col">
+    <ul id="findings" class="findings"></ul>
+    <button id="copy" class="quiet" type="button">Copy the findings</button>
+    </div>
+  </section>
+  </div>
+
+  <section class="band notes" aria-labelledby="h-how">
+    <h2 class="marg" id="h-how">How it’s scored</h2>
+    <div class="col">
+    <dl>
+      <dt>Bias</dt>
+      <dd>The total of forecast minus actual, divided by the total of the actuals. Negative means your forecasts ran low.</dd>
+      <dt>Average miss</dt>
+      <dd>The total of the misses, ignoring direction, divided by the total of the actuals (often called WAPE). Big periods count for more than small ones, so a miss on a tiny month can’t dominate.</dd>
+      <dt>On target</dt>
+      <dd>The share of forecasts within the tolerance you set. Rows with an actual of zero are left out of the percentage measures.</dd>
+      <dt>Order</dt>
+      <dd>Rows are read in the order you paste them, so put the oldest first. “The last 12” means the bottom 12 rows.</dd>
+      <dt>Brier score</dt>
+      <dd>The average of (probability − outcome)², where the outcome is 1 if it happened and 0 if not. Zero is perfect, and always saying 50% scores 0.25.</dd>
+      <dt>Skill</dt>
+      <dd>How much better your Brier score is than always forecasting the overall rate in your own data. Above zero means your forecasts add something.</dd>
+      <dt>Calibration</dt>
+      <dd>Forecasts grouped in 10-point bands. In a well-calibrated set, things you call 70% happen about 70% of the time.</dd>
+    </dl>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="h-contact">
+    <h2 class="marg" id="h-contact">Contact</h2>
+    <div class="col">
+    <p class="cta">Want this run on your team’s forecasts every month? Write to <a href="mailto:hello@halberesford.com?subject=Forecast%20check">hello@halberesford.com</a>.</p>
+    </div>
+  </section>
+</main>
+<noscript><p style="max-width:64rem;margin:0 auto;padding:0 1.75rem 2rem">This tool needs JavaScript. It runs entirely in your browser.</p></noscript>
+
+  <footer>
+    <div class="foot-in">
+      Views here are my own and not those of any employer.<br />
+      &copy; <span class="years">2026</span> Hal Beresford &middot; <a href="/">halberesford.com</a>
+    </div>
+  </footer>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var NS = 'http://www.w3.org/2000/svg';
+  var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  // ---------- sample data (made up) ----------
+  function sampleAmounts() {
+    var f = [1170, 1255, 1120, 1110, 1225, 1180, 1250, 1240, 1260, 1265, 1310, 1275, 1270, 1335, 1280, 1235, 1310, 1375, 1345, 1380, 1440, 1395, 1425, 1415];
+    var a = [1180, 1240, 1105, 1130, 1210, 1195, 1230, 1260, 1245, 1280, 1300, 1290, 1320, 1395, 1265, 1290, 1370, 1360, 1405, 1440, 1425, 1460, 1490, 1480];
+    var lines = ['Month\tForecast\tActual'];
+    for (var i = 0; i < 24; i++) {
+      var m = (10 + i) % 12, y = 2024 + Math.floor((10 + i) / 12);
+      lines.push(MONTHS[m] + ' ' + y + '\t' + f[i] + '\t' + a[i]);
+    }
+    return lines.join('\n');
+  }
+  function sampleProbs() {
+    var spec = [[10, 6, 0], [30, 8, 2], [50, 6, 3], [70, 10, 6], [90, 10, 7]];
+    var rows = [];
+    spec.forEach(function (s) {
+      for (var k = 0; k < s[1]; k++) rows.push([s[0], k < s[2] ? 'yes' : 'no']);
+    });
+    // deterministic shuffle so the sample reads like a real log
+    var seed = 7;
+    for (var i = rows.length - 1; i > 0; i--) {
+      seed = (seed * 9301 + 49297) % 233280;
+      var j = Math.floor(seed / 233280 * (i + 1));
+      var t = rows[i]; rows[i] = rows[j]; rows[j] = t;
+    }
+    var lines = ['Deal\tChance it closes\tClosed?'];
+    rows.forEach(function (r, i) { lines.push('Deal ' + String(i + 1).padStart(2, '0') + '\t' + r[0] + '%\t' + r[1]); });
+    return lines.join('\n');
+  }
+  var SAMPLE = {
+    amounts: { note: 'You’re looking at made-up sample data: 24 months of revenue forecasts, in thousands.', text: sampleAmounts },
+    probs: { note: 'You’re looking at made-up sample data: 40 forecasts of whether a deal would close.', text: sampleProbs }
+  };
+  var HELP = {
+    amounts: 'Paste an optional label (like the month), then the forecast, then the actual, one row per period. Copy straight from a spreadsheet or upload a CSV. Put the oldest row first.',
+    probs: 'Paste an optional label, a probability (70% or 0.7), and whether it happened (yes or no, 1 or 0), one forecast per row.'
+  };
+  var PLACEHOLDER = {
+    amounts: 'Month, Forecast, Actual\nJan 2026, 1200, 1185\nFeb 2026, 1250, 1290\n...',
+    probs: 'Question, Probability, Happened\nDeal A closes, 70%, yes\nDeal B closes, 40%, no\n...'
+  };
+
+  // ---------- parsing ----------
+  function num(s) {
+    if (s == null) return NaN;
+    var t = String(s).trim();
+    if (t === '' || /^(n\/?a|null|none|-|—|–)$/i.test(t)) return NaN;
+    t = t.replace(/[−–—]/g, '-');
+    var neg = false;
+    if (/^\(.*\)$/.test(t)) { neg = true; t = t.slice(1, -1).trim(); }
+    t = t.replace(/[\s$€£¥]/g, '').replace(/%$/, '');
+    // 1.234,56 and 1.234.567 (European grouping) or 12,5 (decimal comma); otherwise commas group thousands
+    if (/^[-+]?\d{1,3}(\.\d{3})+,\d+$/.test(t) || /^[-+]?\d{1,3}(\.\d{3}){2,}$/.test(t)) t = t.replace(/\./g, '').replace(',', '.');
+    else if (/^[-+]?\d+,\d{1,2}$/.test(t)) t = t.replace(',', '.');
+    else t = t.replace(/,/g, '');
+    if (!/^[-+]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i.test(t)) return NaN;
+    var v = parseFloat(t);
+    return neg ? -v : v;
+  }
+  function isPct(s) { return /%\s*$/.test(String(s == null ? '' : s).trim()); }
+  function outcome(s) {
+    var t = String(s == null ? '' : s).trim().toLowerCase();
+    if (['1', 'yes', 'y', 'true', 't', 'happened', 'hit', 'won', 'win', 'closed'].indexOf(t) >= 0) return 1;
+    if (['0', 'no', 'n', 'false', 'f', 'did not happen', "didn't happen", 'didn’t happen', 'miss', 'lost', 'loss', 'not closed'].indexOf(t) >= 0) return 0;
+    var v = num(t);
+    if (v === 1) return 1;
+    if (v === 0) return 0;
+    return NaN;
+  }
+  function detectDelim(text) {
+    var lines = text.split(/\r?\n/).filter(function (l) { return l.trim(); }).slice(0, 5);
+    var first = lines[0] || '';
+    if (first.indexOf('\t') >= 0) return '\t';
+    var sc = (first.match(/;/g) || []).length, cc = (first.match(/,/g) || []).length;
+    if (sc > cc) return ';';
+    if (cc > 0) return ',';
+    return 'ws';
+  }
+  function parseDelimited(text, delim) {
+    if (delim === 'ws') {
+      return text.split(/\r?\n/).map(function (l) {
+        var parts = l.trim().split(/\s{2,}/);
+        if (parts.length < 2) parts = l.trim().split(/\s+/);
+        return parts;
+      }).filter(function (r) { return r.some(function (c) { return c.trim() !== ''; }); });
+    }
+    var rows = [], row = [], field = '', inQ = false;
+    for (var i = 0; i < text.length; i++) {
+      var c = text[i];
+      if (inQ) {
+        if (c === '"') { if (text[i + 1] === '"') { field += '"'; i++; } else inQ = false; }
+        else field += c;
+      } else if (c === '"') inQ = true;
+      else if (c === delim) { row.push(field); field = ''; }
+      else if (c === '\n' || c === '\r') {
+        if (c === '\r' && text[i + 1] === '\n') i++;
+        row.push(field); field = ''; rows.push(row); row = [];
+      } else field += c;
+    }
+    if (field !== '' || row.length) { row.push(field); rows.push(row); }
+    return rows.map(function (r) { return r.map(function (s) { return s.trim(); }); })
+      .filter(function (r) { return r.some(function (s) { return s !== ''; }); });
+  }
+  function splitHeader(rows) {
+    if (rows.length < 2) return { headers: null, body: rows };
+    var r0 = rows[0], r1 = rows[1], header = false;
+    for (var j = 0; j < r0.length; j++) {
+      var a = r0[j] || '', b = r1[j] || '';
+      if (a && isNaN(num(a)) && isNaN(outcome(a)) && (!isNaN(num(b)) || !isNaN(outcome(b)))) { header = true; break; }
+    }
+    if (!header && r0.every(function (c) { return isNaN(num(c)); }) && r1.some(function (c) { return !isNaN(num(c)); })) header = true;
+    return header ? { headers: r0, body: rows.slice(1) } : { headers: null, body: rows };
+  }
+  function profile(body, ncol) {
+    var cols = [];
+    for (var j = 0; j < ncol; j++) {
+      var n = 0, numeric = 0, outc = 0, pct = 0, min = Infinity, max = -Infinity, sample = '';
+      body.forEach(function (r) {
+        var c = r[j];
+        if (c == null || c === '') return;
+        n++;
+        if (!sample) sample = c;
+        var v = num(c);
+        if (!isNaN(v)) { numeric++; if (v < min) min = v; if (v > max) max = v; }
+        if (!isNaN(outcome(c))) outc++;
+        if (isPct(c)) pct++;
+      });
+      cols.push({ n: n, numShare: n ? numeric / n : 0, outShare: n ? outc / n : 0, pctShare: n ? pct / n : 0, min: min, max: max, sample: sample });
+    }
+    return cols;
+  }
+  function findHeader(headers, re, exclude) {
+    if (!headers) return -1;
+    for (var j = 0; j < headers.length; j++) {
+      if (exclude.indexOf(j) >= 0) continue;
+      if (re.test(headers[j] || '')) return j;
+    }
+    return -1;
+  }
+  function guessMapping(parsed, mode) {
+    var h = parsed.headers, cols = parsed.cols, ncol = cols.length, used = [];
+    var map = { label: -1, x: -1, y: -1 };
+    var labelRe = /period|month|date|week|quarter|year|item|name|label|question|sku|product|deal|region|store|account/i;
+    if (mode === 'amounts') {
+      map.x = findHeader(h, /fore|fcst|plan|budget|pred|proj|estim|guid|target/i, used); if (map.x >= 0) used.push(map.x);
+      map.y = findHeader(h, /actual|^act\b|real|result|observ/i, used); if (map.y >= 0) used.push(map.y);
+      var numeric = [];
+      for (var j = 0; j < ncol; j++) if (cols[j].numShare >= 0.6 && used.indexOf(j) < 0) numeric.push(j);
+      if (map.x < 0 && numeric.length) { map.x = numeric.shift(); used.push(map.x); }
+      if (map.y < 0 && numeric.length) { map.y = numeric.shift(); used.push(map.y); }
+    } else {
+      map.y = findHeader(h, /outcome|happen|result|actual|resolved|closed\?|yes|won|hit/i, used);
+      if (map.y >= 0 && cols[map.y].outShare < 0.6) map.y = -1;
+      if (map.y >= 0) used.push(map.y);
+      map.x = findHeader(h, /prob|chance|likel|confid|percent|pct|%|forecast/i, used);
+      if (map.x >= 0 && cols[map.x].numShare < 0.6) map.x = -1;
+      if (map.x >= 0) used.push(map.x);
+      if (map.y < 0) {
+        for (var k = ncol - 1; k >= 0; k--) if (used.indexOf(k) < 0 && cols[k].outShare >= 0.8) { map.y = k; used.push(k); break; }
+      }
+      if (map.x < 0) {
+        var best = -1;
+        for (var q = 0; q < ncol; q++) {
+          if (used.indexOf(q) >= 0) continue;
+          var c = cols[q];
+          if (c.numShare >= 0.8 && c.min >= 0 && c.max <= 100 && !(c.outShare >= 0.95 && c.max <= 1 && c.min >= 0 && (c.max === 1 || c.max === 0))) { best = q; break; }
+        }
+        if (best >= 0) { map.x = best; used.push(best); }
+      }
+    }
+    map.label = findHeader(h, labelRe, used);
+    if (map.label < 0) {
+      for (var z = 0; z < ncol; z++) if (used.indexOf(z) < 0 && cols[z].numShare < 0.5) { map.label = z; break; }
+    }
+    return map;
+  }
+
+  // ---------- state ----------
+  var state = { mode: 'amounts', parsed: null, parsedText: null, map: null, sample: false, last: null };
+
+  function currentMode() { return document.querySelector('input[name="mode"]:checked').value; }
+  function setMsg(text, isErr) { var m = $('msg'); m.textContent = text || ''; m.className = 'msg' + (isErr ? ' err' : ''); }
+
+  function parseInput() {
+    var text = $('data').value;
+    if (!text.trim()) return null;
+    var rows = parseDelimited(text, detectDelim(text));
+    if (!rows.length) return null;
+    var sp = splitHeader(rows);
+    var ncol = rows.reduce(function (m, r) { return Math.max(m, r.length); }, 0);
+    var parsed = { headers: sp.headers, body: sp.body, ncol: ncol };
+    parsed.cols = profile(parsed.body, ncol);
+    return parsed;
+  }
+
+  function colName(parsed, j) {
+    if (parsed.headers && parsed.headers[j]) return parsed.headers[j];
+    var s = parsed.cols[j].sample;
+    return 'Column ' + (j + 1) + (s ? ' (e.g. ' + String(s).slice(0, 14) + ')' : '');
+  }
+
+  function buildMappingUI() {
+    var box = $('mapping'), p = state.parsed, m = state.map;
+    box.textContent = '';
+    if (!p) { box.hidden = true; return; }
+    var mode = state.mode;
+    var fields = mode === 'amounts'
+      ? [['label', 'Label (optional)'], ['x', 'Forecast'], ['y', 'Actual']]
+      : [['label', 'Label (optional)'], ['x', 'Probability'], ['y', 'Happened?']];
+    var cap = document.createElement('p');
+    cap.className = 'cap';
+    cap.textContent = 'Columns I picked. Change them if I guessed wrong.';
+    box.appendChild(cap);
+    fields.forEach(function (f) {
+      var wrap = document.createElement('div');
+      var lab = document.createElement('label');
+      lab.textContent = f[1];
+      lab.htmlFor = 'map-' + f[0];
+      var sel = document.createElement('select');
+      sel.id = 'map-' + f[0];
+      if (f[0] === 'label') {
+        var none = document.createElement('option'); none.value = '-1'; none.textContent = '(none)'; sel.appendChild(none);
+      } else {
+        var pick = document.createElement('option'); pick.value = '-1'; pick.textContent = 'Choose a column'; sel.appendChild(pick);
+      }
+      for (var j = 0; j < p.ncol; j++) {
+        var o = document.createElement('option'); o.value = String(j); o.textContent = colName(p, j); sel.appendChild(o);
+      }
+      sel.value = String(m[f[0]]);
+      sel.addEventListener('change', function () { state.map[f[0]] = parseInt(sel.value, 10); run(true); });
+      wrap.appendChild(lab); wrap.appendChild(sel); box.appendChild(wrap);
+    });
+    box.hidden = false;
+  }
+
+  // ---------- scoring ----------
+  function scoreAmounts(p, map, tol) {
+    if (map.x < 0 || map.y < 0) return { error: 'Choose which column is the forecast and which is the actual.' };
+    var items = [], skipped = 0;
+    p.body.forEach(function (r, i) {
+      var f = num(r[map.x]), a = num(r[map.y]);
+      if (isNaN(f) || isNaN(a)) { skipped++; return; }
+      var label = map.label >= 0 && r[map.label] ? r[map.label] : 'Row ' + (i + 1);
+      items.push({ label: label, f: f, a: a, e: f - a, pe: a !== 0 ? (f - a) / Math.abs(a) : null });
+    });
+    if (items.length < 3) return { error: 'I need at least 3 rows with both a forecast and an actual.' + (skipped ? ' ' + skipped + ' rows had something other than a number.' : '') };
+    var sumAbsA = 0, sumE = 0, sumAbsE = 0;
+    items.forEach(function (d) { sumAbsA += Math.abs(d.a); sumE += d.e; sumAbsE += Math.abs(d.e); });
+    var pctItems = items.filter(function (d) { return d.pe !== null; });
+    var hits = pctItems.filter(function (d) { return Math.abs(d.pe) <= tol + 1e-12; }).length;
+    var res = {
+      mode: 'amounts', items: items, pctItems: pctItems, skipped: skipped, tol: tol,
+      bias: sumAbsA > 0 ? sumE / sumAbsA : null,
+      wape: sumAbsA > 0 ? sumAbsE / sumAbsA : null,
+      mae: sumAbsE / items.length, hits: hits, zeroActuals: items.length - pctItems.length
+    };
+    res.findings = amountFindings(res);
+    return res;
+  }
+  function looksLikeTime(labels) {
+    var re = /^(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)|^q[1-4]\b|^(fy)?\d{2,4}([-\/ ]\d{1,2})?([-\/ ]\d{1,4})?$|^\d{1,2}\/\d{1,2}\/\d{2,4}$|week|wk\b|^h[12]\b/i;
+    var k = labels.filter(function (l) { return re.test(String(l).trim()); }).length;
+    return k >= labels.length * 0.6;
+  }
+  function pct1(v) { return (Math.abs(v) * 100).toFixed(1) + '%'; }
+  function amountFindings(r) {
+    var out = [], pi = r.pctItems;
+    var unit = looksLikeTime(r.items.map(function (d) { return d.label; })) ? 'periods' : 'rows';
+    if (pi.length) {
+      var w = pi.slice(-Math.min(12, pi.length)), wn = w.length;
+      var under = w.filter(function (d) { return d.pe < 0; }), over = w.filter(function (d) { return d.pe > 0; });
+      var span = (wn === pi.length ? 'the ' : 'the last ') + wn + ' ' + unit;
+      var across = (wn === pi.length ? 'all ' : 'the last ') + wn + ' ' + unit;
+      var avg = function (arr) { return arr.reduce(function (s, d) { return s + Math.abs(d.pe); }, 0) / arr.length; };
+      if (wn < 6) {
+        out.push('With only ' + wn + ' ' + unit + ', it’s too early to call a lean: ' + over.length + ' came in high and ' + under.length + ' came in low.');
+      } else if (under.length >= Math.ceil(wn * 2 / 3)) {
+        out.push('You forecast too low in ' + under.length + ' of ' + span + ', by an average of ' + pct1(avg(under)) + '.');
+      } else if (over.length >= Math.ceil(wn * 2 / 3)) {
+        out.push('You forecast too high in ' + over.length + ' of ' + span + ', by an average of ' + pct1(avg(over)) + '.');
+      } else {
+        out.push('No steady lean: across ' + across + ', ' + over.length + ' forecasts came in high and ' + under.length + ' came in low.');
+      }
+      var tolTxt = (r.tol * 100).toFixed(r.tol * 100 % 1 ? 1 : 0);
+      var hitLine = r.hits + ' of ' + pi.length + ' forecasts landed within ±' + tolTxt + '% of actual (' + Math.round(r.hits / pi.length * 100) + '%).';
+      if (r.zeroActuals) hitLine += ' ' + r.zeroActuals + (r.zeroActuals === 1 ? ' row with an actual of zero is' : ' rows with an actual of zero are') + ' left out.';
+      out.push(hitLine);
+      if (pi.length >= 12) {
+        var h = Math.floor(pi.length / 2), early = pi.slice(0, h), late = pi.slice(pi.length - h);
+        var wOf = function (arr) { var se = 0, sa = 0; arr.forEach(function (d) { se += Math.abs(d.e); sa += Math.abs(d.a); }); return sa ? se / sa : 0; };
+        var w1 = wOf(early), w2 = wOf(late);
+        if (w2 >= w1 * 1.5 && w2 - w1 >= 0.01) out.push('Your misses are getting bigger: the average miss rose from ' + pct1(w1) + ' in the first ' + h + ' ' + unit + ' to ' + pct1(w2) + ' in the last ' + h + '.');
+        else if (w1 >= w2 * 1.5 && w1 - w2 >= 0.01) out.push('Your misses are getting smaller: the average miss fell from ' + pct1(w1) + ' in the first ' + h + ' ' + unit + ' to ' + pct1(w2) + ' in the last ' + h + '.');
+      }
+      var k = 0, s = Math.sign(pi[pi.length - 1].pe);
+      for (var i = pi.length - 1; i >= 0 && s !== 0 && Math.sign(pi[i].pe) === s; i--) k++;
+      if (k >= 4) {
+        out.push('Your last ' + k + ' forecasts were all ' + (s < 0 ? 'low' : 'high') + '. Worth checking what changed.');
+      } else {
+        var big = pi.reduce(function (b, d) { return Math.abs(d.pe) > Math.abs(b.pe) ? d : b; }, pi[0]);
+        out.push('The biggest miss was ' + big.label + ': ' + pct1(big.pe) + ' ' + (big.pe < 0 ? 'low' : 'high') + '.');
+      }
+    } else {
+      out.push('Every actual is zero, so percentage measures can’t be computed. The average miss in units is ' + fmtNum(r.mae) + '.');
+    }
+    return out;
+  }
+
+  function scoreProbs(p, map) {
+    if (map.x < 0 || map.y < 0) return { error: 'Choose which column is the probability and which says whether it happened.' };
+    var raw = [], skipped = 0;
+    p.body.forEach(function (r, i) {
+      var pv = num(r[map.x]), o = outcome(r[map.y]);
+      if (isNaN(pv) || isNaN(o)) { skipped++; return; }
+      raw.push({ label: map.label >= 0 && r[map.label] ? r[map.label] : 'Row ' + (i + 1), p: pv, pct: isPct(r[map.x]), o: o });
+    });
+    var anyAbove1 = raw.some(function (d) { return d.p > 1; });
+    var items = [];
+    raw.forEach(function (d) {
+      var v = (d.pct || anyAbove1) ? d.p / 100 : d.p;
+      if (v < 0 || v > 1) { skipped++; return; }
+      items.push({ label: d.label, p: v, o: d.o, se: (v - d.o) * (v - d.o) });
+    });
+    if (items.length < 5) return { error: 'I need at least 5 rows with a probability and a yes or no.' + (skipped ? ' ' + skipped + ' rows couldn’t be read.' : '') };
+    var n = items.length;
+    var brier = items.reduce(function (s, d) { return s + d.se; }, 0) / n;
+    var yes = items.filter(function (d) { return d.o === 1; }).length;
+    var base = yes / n, ref = base * (1 - base);
+    var bins = [];
+    for (var b = 0; b < 10; b++) bins.push({ lo: b / 10, hi: (b + 1) / 10, n: 0, sp: 0, so: 0 });
+    items.forEach(function (d) {
+      var k = Math.min(9, Math.floor(d.p * 10 + 1e-9));
+      bins[k].n++; bins[k].sp += d.p; bins[k].so += d.o;
+    });
+    bins.forEach(function (bb) { if (bb.n) { bb.pred = bb.sp / bb.n; bb.obs = bb.so / bb.n; } });
+    var res = { mode: 'probs', items: items, skipped: skipped, brier: brier, base: base, yes: yes, ref: ref, skill: ref > 0 ? 1 - brier / ref : null, bins: bins };
+    res.findings = probFindings(res);
+    return res;
+  }
+  function probFindings(r) {
+    var out = [], basePct = Math.round(r.base * 100);
+    if (r.skill === null) {
+      out.push('Every outcome went the same way, so there’s no base rate to beat. Add forecasts that went both ways.');
+    } else {
+      var sk = Math.round(Math.abs(r.skill) * 100);
+      if (sk === 0) out.push('Brier score ' + r.brier.toFixed(3) + ': about the same as always predicting the overall rate of ' + basePct + '%.');
+      else out.push('Brier score ' + r.brier.toFixed(3) + ': ' + sk + '% ' + (r.skill > 0 ? 'better' : 'worse') + ' than always predicting the overall rate of ' + basePct + '%.');
+    }
+    var cand = r.bins.filter(function (b) { return b.n >= 5; });
+    if (!cand.length) {
+      out.push('Too few forecasts in any one band to judge calibration. Aim for at least 5 per 10-point band.');
+    } else {
+      var worst = cand.reduce(function (w, b) { return Math.abs(b.obs - b.pred) > Math.abs(w.obs - w.pred) ? b : w; }, cand[0]);
+      if (Math.abs(worst.obs - worst.pred) >= 0.05) {
+        out.push('When you said about ' + Math.round(worst.pred * 100) + '%, it happened ' + Math.round(worst.obs * 100) + '% of the time (' + worst.so + ' of ' + worst.n + ').');
+      } else {
+        out.push('Your bands line up well: no group of 5 or more forecasts is off by more than 5 points.');
+      }
+    }
+    var hi = r.items.filter(function (d) { return d.p >= 0.5; }), lo = r.items.filter(function (d) { return d.p < 0.5; });
+    var gap = function (arr) { return arr.reduce(function (s, d) { return s + d.o - d.p; }, 0) / arr.length; };
+    var t = 0.05;
+    var hg = hi.length >= 3 ? gap(hi) : null, lg = lo.length >= 3 ? gap(lo) : null;
+    var hd = hg === null ? 0 : hg < -t ? -1 : hg > t ? 1 : 0;
+    var ld = lg === null ? 0 : lg < -t ? -1 : lg > t ? 1 : 0;
+    if (hd === -1 && ld === -1) out.push('Your probabilities run high: events happened less often than forecast, on both your likely and your unlikely calls.');
+    else if (hd === 1 && ld === 1) out.push('Your probabilities run low: events happened more often than forecast, on both your likely and your unlikely calls.');
+    else if (hd === -1 && ld === 1) out.push('You’re overconfident: your likely calls come true less often than you say, and your unlikely ones more often.');
+    else if (hd === 1 && ld === -1) out.push('You could be bolder: your likely calls come true even more often than you say, and your unlikely ones less often.');
+    else if (hd === -1) out.push('Your likely calls come true less often than you say.');
+    else if (hd === 1) out.push('Your likely calls come true more often than you say, so you could commit harder.');
+    else if (ld === 1) out.push('Your unlikely calls happen more often than you say.');
+    else if (ld === -1) out.push('Your unlikely calls happen even less often than you say, so you could go lower.');
+    else if (hg !== null && lg !== null) out.push('No overall lean: your likely and unlikely calls both come true about as often as you say.');
+    return out;
+  }
+
+  // ---------- formatting ----------
+  function fmtNum(v) {
+    var a = Math.abs(v), d = a >= 100 ? 0 : a >= 1 ? 2 : 3;
+    return new Intl.NumberFormat('en-US', { maximumFractionDigits: d }).format(v).replace('-', '−');
+  }
+  function signedPct(v) {
+    var s = (Math.abs(v) * 100).toFixed(1) + '%';
+    if (Math.abs(v) < 0.0005) return '0.0%';
+    return (v < 0 ? '−' : '+') + s;
+  }
+
+  // ---------- rendering ----------
+  function tile(k, v, s) {
+    var d = document.createElement('div'); d.className = 'tile';
+    var a = document.createElement('div'); a.className = 'k'; a.textContent = k;
+    var b = document.createElement('div'); b.className = 'v'; b.textContent = v;
+    var c = document.createElement('div'); c.className = 's'; c.textContent = s;
+    d.appendChild(a); d.appendChild(b); d.appendChild(c);
+    return d;
+  }
+  function renderTiles(r) {
+    var box = $('tiles'); box.textContent = '';
+    if (r.mode === 'amounts') {
+      var leanTxt = r.bias === null ? 'no actuals to compare' : Math.abs(r.bias) < 0.005 ? 'no real lean' : r.bias < 0 ? 'forecasts ran low' : 'forecasts ran high';
+      box.appendChild(tile('Bias', r.bias === null ? '—' : signedPct(r.bias), leanTxt));
+      box.appendChild(tile('Average miss', r.wape === null ? '—' : (r.wape * 100).toFixed(1) + '%', 'of actuals, weighted'));
+      var m = r.pctItems.length;
+      var tolTxt = (r.tol * 100).toFixed(r.tol * 100 % 1 ? 1 : 0);
+      box.appendChild(tile('On target', m ? r.hits + ' of ' + m : '—', m ? 'within ±' + tolTxt + '% (' + Math.round(r.hits / m * 100) + '%)' : ''));
+      box.appendChild(tile('Forecasts scored', String(r.items.length), r.skipped ? r.skipped + ' rows skipped' : 'all rows used'));
+    } else {
+      box.appendChild(tile('Brier score', r.brier.toFixed(3), '0 is perfect; 0.25 is a coin flip'));
+      box.appendChild(tile('Skill', r.skill === null ? '—' : (r.skill > 0 ? '+' : r.skill < 0 ? '−' : '') + Math.round(Math.abs(r.skill) * 100) + '%', 'vs. always saying ' + Math.round(r.base * 100) + '%'));
+      box.appendChild(tile('Happened', Math.round(r.base * 100) + '%', r.yes + ' of ' + r.items.length + ' came true'));
+      box.appendChild(tile('Forecasts scored', String(r.items.length), r.skipped ? r.skipped + ' rows skipped' : 'all rows used'));
+    }
+  }
+  function renderTable(r) {
+    var box = $('rowsTable'); box.textContent = '';
+    var t = document.createElement('table'), thead = document.createElement('thead'), tb = document.createElement('tbody');
+    var cols = r.mode === 'amounts' ? ['Label', 'Forecast', 'Actual', 'Miss', 'Miss %'] : ['Label', 'Probability', 'Happened', 'Squared error'];
+    var tr = document.createElement('tr');
+    cols.forEach(function (c) { var th = document.createElement('th'); th.textContent = c; th.scope = 'col'; tr.appendChild(th); });
+    thead.appendChild(tr);
+    r.items.slice(0, 1000).forEach(function (d) {
+      var row = document.createElement('tr');
+      var cells = r.mode === 'amounts'
+        ? [d.label, fmtNum(d.f), fmtNum(d.a), fmtNum(d.e), d.pe === null ? '—' : signedPct(d.pe)]
+        : [d.label, Math.round(d.p * 1000) / 10 + '%', d.o ? 'yes' : 'no', d.se.toFixed(3)];
+      cells.forEach(function (c) { var td = document.createElement('td'); td.textContent = c; row.appendChild(td); });
+      tb.appendChild(row);
+    });
+    t.appendChild(thead); t.appendChild(tb); box.appendChild(t);
+    if (r.items.length > 1000) { var more = document.createElement('p'); more.className = 'help'; more.textContent = 'Showing the first 1,000 of ' + r.items.length.toLocaleString('en-US') + ' rows.'; box.appendChild(more); }
+  }
+  function renderFindings(r) {
+    var ul = $('findings'); ul.textContent = '';
+    r.findings.forEach(function (f) { var li = document.createElement('li'); li.textContent = f; ul.appendChild(li); });
+  }
+
+  // ---------- charts ----------
+  function el(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function txt(parent, x, y, s, cls, anchor) {
+    var t = el('text', { x: x, y: y, 'class': cls || 'tick', 'text-anchor': anchor || 'start' }, parent);
+    t.textContent = s;
+    return t;
+  }
+  function niceTicks(lo, hi, count) {
+    if (!isFinite(lo) || !isFinite(hi)) { lo = 0; hi = 1; }
+    if (lo === hi) { lo -= Math.abs(lo) * 0.1 || 1; hi += Math.abs(hi) * 0.1 || 1; }
+    var step0 = (hi - lo) / count, mag = Math.pow(10, Math.floor(Math.log10(step0))), err = step0 / mag;
+    var step = (err >= 7.5 ? 10 : err >= 3.5 ? 5 : err >= 1.5 ? 2 : 1) * mag;
+    var start = Math.floor(lo / step) * step, end = Math.ceil(hi / step) * step, ticks = [];
+    for (var v = start; v <= end + step / 2; v += step) ticks.push(Math.round(v / step) * step);
+    return { ticks: ticks, lo: start, hi: end };
+  }
+  function pickIdx(n, k) {
+    if (n <= k) return Array.from({ length: n }, function (_, i) { return i; });
+    var out = [];
+    for (var j = 0; j < k; j++) { var i = Math.round(j * (n - 1) / (k - 1)); if (out.indexOf(i) < 0) out.push(i); }
+    return out;
+  }
+  function short(s, n) { s = String(s); return s.length > n ? s.slice(0, n - 1) + '…' : s; }
+  function makeBox(parent, title, legendItems, caption) {
+    var box = document.createElement('div'); box.className = 'chartbox';
+    var h = document.createElement('h3'); h.textContent = title; box.appendChild(h);
+    if (legendItems && legendItems.length) {
+      var lg = document.createElement('div'); lg.className = 'legend';
+      legendItems.forEach(function (it) {
+        var s = document.createElement('span');
+        var sw = document.createElement('span'); sw.className = 'sw' + (it.box ? ' box' : '') + (it.dot ? ' dot' : '');
+        if (it.dash) { sw.style.borderTop = '2px dashed ' + it.color; sw.style.height = '0'; } else sw.style.background = it.color;
+        s.appendChild(sw); s.appendChild(document.createTextNode(it.label)); lg.appendChild(s);
+      });
+      box.appendChild(lg);
+    }
+    var holder = document.createElement('div'); holder.style.position = 'relative'; box.appendChild(holder);
+    var tip = document.createElement('div'); tip.className = 'tip'; holder.appendChild(tip);
+    if (caption) { var c = document.createElement('p'); c.className = 'cap'; c.textContent = caption; box.appendChild(c); }
+    parent.appendChild(box);
+    return { box: box, holder: holder, tip: tip };
+  }
+  function showTip(ui, svg, W, x, y, lines) {
+    var rect = svg.getBoundingClientRect(), scale = rect.width / W;
+    ui.tip.textContent = '';
+    lines.forEach(function (ln, i) {
+      if (i) ui.tip.appendChild(document.createElement('br'));
+      if (i === 0) { var b = document.createElement('b'); b.textContent = ln; ui.tip.appendChild(b); }
+      else ui.tip.appendChild(document.createTextNode(ln));
+    });
+    ui.tip.style.display = 'block';
+    var left = x * scale, hw = ui.tip.offsetWidth / 2, maxL = rect.width - hw - 2;
+    ui.tip.style.left = Math.max(hw + 2, Math.min(maxL, left)) + 'px';
+    ui.tip.style.top = (y * scale) + 'px';
+  }
+  function hideTip(ui) { ui.tip.style.display = 'none'; }
+  function svgX(svg, W, evt) { var r = svg.getBoundingClientRect(); return (evt.clientX - r.left) * W / r.width; }
+
+  function lineChart(parent, r) {
+    var items = r.items, ui = makeBox(parent, 'Forecast and actual',
+      [{ label: 'Actual', color: 'var(--s1)' }, { label: 'Forecast', color: 'var(--s2)' }],
+      'Hover or tap for each row’s numbers.');
+    var W = Math.max(300, Math.round(ui.holder.clientWidth || 700)), narrow = W < 480, H = narrow ? 240 : 290;
+    var m = { t: 16, r: narrow ? 64 : 80, b: 34, l: narrow ? 48 : 60 };
+    var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, 'class': 'chart', role: 'img', 'aria-label': 'Line chart of forecast and actual for each row' }, null);
+    ui.holder.insertBefore(svg, ui.tip);
+    var vals = []; items.forEach(function (d) { vals.push(d.f, d.a); });
+    var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals), pad = (hi - lo) * 0.08;
+    var tk = niceTicks(lo - pad, hi + pad, narrow ? 4 : 5);
+    var pw = W - m.l - m.r, ph = H - m.t - m.b;
+    var X = function (i) { return m.l + (items.length === 1 ? pw / 2 : i * pw / (items.length - 1)); };
+    var Y = function (v) { return m.t + (tk.hi - v) * ph / (tk.hi - tk.lo); };
+    var g = el('g', { 'class': 'grid' }, svg);
+    tk.ticks.forEach(function (v) { el('line', { x1: m.l, x2: m.l + pw, y1: Y(v), y2: Y(v) }, g); txt(svg, m.l - 8, Y(v) + 4, fmtNum(v), 'tick', 'end'); });
+    pickIdx(items.length, narrow ? 3 : 6).forEach(function (i) { txt(svg, X(i), H - m.b + 20, short(items[i].label, narrow ? 9 : 12), 'tick', 'middle'); });
+    var path = function (key) { return items.map(function (d, i) { return (i ? 'L' : 'M') + X(i).toFixed(1) + ',' + Y(d[key]).toFixed(1); }).join(''); };
+    el('path', { d: path('a'), 'class': 'ln ln-a' }, svg);
+    el('path', { d: path('f'), 'class': 'ln ln-f' }, svg);
+    var last = items.length - 1, ya = Y(items[last].a), yf = Y(items[last].f);
+    if (Math.abs(ya - yf) < 15) { var mid = (ya + yf) / 2, up = ya <= yf; ya = mid + (up ? -8 : 8); yf = mid + (up ? 8 : -8); }
+    txt(svg, X(last) + 8, ya + 4, 'Actual', 'lbl lbl-a', 'start');
+    txt(svg, X(last) + 8, yf + 4, 'Forecast', 'lbl lbl-f', 'start');
+    var cross = el('line', { y1: m.t, y2: m.t + ph, 'class': 'cross', visibility: 'hidden' }, svg);
+    var da = el('circle', { r: 4.5, 'class': 'dot-a', visibility: 'hidden' }, svg);
+    var df = el('circle', { r: 4.5, 'class': 'dot-f', visibility: 'hidden' }, svg);
+    var hit = el('rect', { x: m.l, y: m.t, width: pw, height: ph, fill: 'transparent' }, svg);
+    function move(evt) {
+      var sx = svgX(svg, W, evt), i = items.length === 1 ? 0 : Math.round((sx - m.l) / (pw / (items.length - 1)));
+      i = Math.max(0, Math.min(items.length - 1, i));
+      var d = items[i], x = X(i);
+      cross.setAttribute('x1', x); cross.setAttribute('x2', x); cross.setAttribute('visibility', 'visible');
+      da.setAttribute('cx', x); da.setAttribute('cy', Y(d.a)); da.setAttribute('visibility', 'visible');
+      df.setAttribute('cx', x); df.setAttribute('cy', Y(d.f)); df.setAttribute('visibility', 'visible');
+      showTip(ui, svg, W, x, Math.min(Y(d.a), Y(d.f)), [d.label, 'Forecast ' + fmtNum(d.f), 'Actual ' + fmtNum(d.a), 'Miss ' + (d.pe === null ? fmtNum(d.e) : signedPct(d.pe))]);
+    }
+    function leave() { cross.setAttribute('visibility', 'hidden'); da.setAttribute('visibility', 'hidden'); df.setAttribute('visibility', 'hidden'); hideTip(ui); }
+    hit.addEventListener('pointermove', move); hit.addEventListener('pointerdown', move); hit.addEventListener('pointerleave', leave);
+  }
+
+  function errorChart(parent, r) {
+    var MAXBARS = 120, pts = r.pctItems.length > MAXBARS ? r.pctItems.slice(-MAXBARS) : r.pctItems;
+    if (!pts.length) return;
+    var tolPct = r.tol * 100;
+    var tolTxt = tolPct.toFixed(tolPct % 1 ? 1 : 0);
+    var ui = makeBox(parent, 'Miss by row, as a share of actual',
+      [{ label: 'Within ±' + tolTxt + '%', color: 'var(--bar-muted)', box: true }, { label: 'Outside it', color: 'var(--s2)', box: true }],
+      'Bars below zero are forecasts that came in low. The shaded band is your tolerance.' + (r.pctItems.length > MAXBARS ? ' Showing the last ' + MAXBARS + ' rows.' : ''));
+    var W = Math.max(300, Math.round(ui.holder.clientWidth || 700)), narrow = W < 480, H = narrow ? 200 : 230;
+    var m = { t: 12, r: 16, b: 34, l: narrow ? 48 : 60 };
+    var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, 'class': 'chart', role: 'img', 'aria-label': 'Bar chart of percentage miss for each row' }, null);
+    ui.holder.insertBefore(svg, ui.tip);
+    var vals = pts.map(function (d) { return d.pe * 100; });
+    var lo = Math.min.apply(null, vals.concat([0, -tolPct])), hi = Math.max.apply(null, vals.concat([0, tolPct]));
+    var tk = niceTicks(lo, hi, 4), pw = W - m.l - m.r, ph = H - m.t - m.b;
+    var Y = function (v) { return m.t + (tk.hi - v) * ph / (tk.hi - tk.lo); };
+    var slot = pw / pts.length, bw = Math.max(2, Math.min(28, slot * 0.7));
+    var X = function (i) { return m.l + slot * (i + 0.5); };
+    var g = el('g', { 'class': 'grid' }, svg);
+    tk.ticks.forEach(function (v) { el('line', { x1: m.l, x2: m.l + pw, y1: Y(v), y2: Y(v) }, g); txt(svg, m.l - 8, Y(v) + 4, (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(+v.toFixed(2)) + '%', 'tick', 'end'); });
+    if (tolPct > 0) el('rect', { x: m.l, y: Y(tolPct), width: pw, height: Math.max(0, Y(-tolPct) - Y(tolPct)), 'class': 'tolband' }, svg);
+    el('line', { x1: m.l, x2: m.l + pw, y1: Y(0), y2: Y(0), 'class': 'zero' }, svg);
+    var bidx = pickIdx(pts.length, narrow ? 3 : 6);
+    bidx.forEach(function (i, k) {
+      var end = bidx.length > 1 && k === bidx.length - 1;
+      txt(svg, end ? X(i) + bw / 2 : X(i), H - m.b + 20, short(pts[i].label, narrow ? 9 : 12), 'tick', end ? 'end' : 'middle');
+    });
+    pts.forEach(function (d, i) {
+      var v = d.pe * 100, y0 = Y(Math.max(v, 0)), y1 = Y(Math.min(v, 0)), out = Math.abs(d.pe) > r.tol + 1e-12;
+      el('rect', { x: X(i) - bw / 2, y: y0, width: bw, height: Math.max(1, y1 - y0), rx: Math.min(2, bw / 4), 'class': out ? 'bar-out' : 'bar-in' }, svg);
+      var hb = el('rect', { x: m.l + slot * i, y: m.t, width: slot, height: ph, 'class': 'bar-hit' }, svg);
+      var show = function () { showTip(ui, svg, W, X(i), Math.min(y0, Y(0)), [d.label, 'Miss ' + signedPct(d.pe) + (out ? ', outside' : ', within') + ' ±' + tolTxt + '%']); };
+      hb.addEventListener('pointerenter', show); hb.addEventListener('pointerdown', show); hb.addEventListener('pointerleave', function () { hideTip(ui); });
+    });
+  }
+
+  function calibrationChart(parent, r) {
+    var bins = r.bins.filter(function (b) { return b.n > 0; });
+    var ui = makeBox(parent, 'Calibration: what you said vs. how often it happened',
+      [{ label: 'Your forecasts, by 10-point band', color: 'var(--s1)', box: true, dot: true }, { label: 'Perfect calibration', color: 'var(--ink-3)', dash: true }],
+      'Bigger dots hold more forecasts. Dots below the dashed line mean things happened less often than you said.');
+    var W = Math.max(300, Math.round(ui.holder.clientWidth || 700)), narrow = W < 480, H = narrow ? 280 : 330;
+    var m = { t: 12, r: 20, b: 46, l: narrow ? 52 : 64 };
+    var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, 'class': 'chart', role: 'img', 'aria-label': 'Calibration chart comparing forecast probability with observed frequency' }, null);
+    ui.holder.insertBefore(svg, ui.tip);
+    var pw = W - m.l - m.r, ph = H - m.t - m.b;
+    var X = function (v) { return m.l + v * pw / 100; }, Y = function (v) { return m.t + (100 - v) * ph / 100; };
+    var g = el('g', { 'class': 'grid' }, svg);
+    [0, 25, 50, 75, 100].forEach(function (v) {
+      el('line', { x1: m.l, x2: m.l + pw, y1: Y(v), y2: Y(v) }, g);
+      el('line', { x1: X(v), x2: X(v), y1: m.t, y2: m.t + ph }, g);
+      txt(svg, m.l - 8, Y(v) + 4, v + '%', 'tick', 'end');
+      txt(svg, X(v), m.t + ph + 18, v + '%', 'tick', 'middle');
+    });
+    txt(svg, m.l + pw / 2, H - 6, 'What you said', 'axis-title', 'middle');
+    var yt = txt(svg, 14, m.t + ph / 2, 'How often it happened', 'axis-title', 'middle');
+    yt.setAttribute('transform', 'rotate(-90 14 ' + (m.t + ph / 2) + ')');
+    el('line', { x1: X(0), y1: Y(0), x2: X(100), y2: Y(100), 'class': 'diag' }, svg);
+    if (bins.length > 1) el('path', { d: bins.map(function (b, i) { return (i ? 'L' : 'M') + X(b.pred * 100).toFixed(1) + ',' + Y(b.obs * 100).toFixed(1); }).join(''), 'class': 'cal-line' }, svg);
+    var maxN = Math.max.apply(null, bins.map(function (b) { return b.n; }));
+    bins.forEach(function (b) {
+      var cx = X(b.pred * 100), cy = Y(b.obs * 100), rad = 5 + 7 * Math.sqrt(b.n / maxN);
+      var c = el('circle', { cx: cx, cy: cy, r: rad, 'class': 'pt' }, svg);
+      var hc = el('circle', { cx: cx, cy: cy, r: Math.max(rad + 6, 14), fill: 'transparent' }, svg);
+      var lo = Math.round(b.lo * 100), hi = Math.round(b.hi * 100);
+      var show = function () { c.classList.add('on'); showTip(ui, svg, W, cx, cy - rad, ['Said ' + lo + '–' + hi + '% (' + b.n + ' forecasts)', 'Average forecast ' + Math.round(b.pred * 100) + '%', 'Happened ' + Math.round(b.obs * 100) + '% (' + b.so + ' of ' + b.n + ')']); };
+      hc.addEventListener('pointerenter', show); hc.addEventListener('pointerdown', show);
+      hc.addEventListener('pointerleave', function () { c.classList.remove('on'); hideTip(ui); });
+    });
+  }
+
+  function renderCharts(r) {
+    var box = $('charts'); box.textContent = '';
+    if (r.mode === 'amounts') { lineChart(box, r); errorChart(box, r); }
+    else calibrationChart(box, r);
+  }
+
+  function render(r) {
+    $('results').hidden = false;
+    var note = $('sampleNote');
+    if (state.sample) { note.textContent = SAMPLE[state.mode].note; note.hidden = false; } else note.hidden = true;
+    renderTiles(r); renderCharts(r); renderTable(r); renderFindings(r);
+    lastW = $('charts').clientWidth;
+  }
+
+  // ---------- flow ----------
+  function run(keepMapping) {
+    var text = $('data').value;
+    if (!text.trim()) { setMsg('Paste some numbers first, or try the sample.', true); $('results').hidden = true; $('mapping').hidden = true; return; }
+    if (!keepMapping || state.parsedText !== text || !state.parsed) {
+      state.parsed = parseInput();
+      state.parsedText = text;
+      if (!state.parsed) { setMsg('I couldn’t read any rows.', true); return; }
+      state.map = guessMapping(state.parsed, state.mode);
+    }
+    buildMappingUI();
+    var tol = Math.max(0, num($('tol').value) || 0) / 100;
+    var r = state.mode === 'amounts' ? scoreAmounts(state.parsed, state.map, tol) : scoreProbs(state.parsed, state.map);
+    if (r.error) { setMsg(r.error, true); $('results').hidden = true; return; }
+    setMsg('Scored ' + r.items.length + ' forecasts' + (r.skipped ? '; skipped ' + r.skipped + ' rows I couldn’t read.' : '.'), false);
+    state.last = r;
+    render(r);
+  }
+  function setMode(mode) {
+    state.mode = mode;
+    $('help').textContent = HELP[mode];
+    $('data').placeholder = PLACEHOLDER[mode];
+    $('tolRow').hidden = mode !== 'amounts';
+  }
+
+  document.querySelectorAll('input[name="mode"]').forEach(function (inp) {
+    inp.addEventListener('change', function () {
+      setMode(currentMode());
+      state.parsed = null;
+      if (state.sample) { $('data').value = SAMPLE[state.mode].text(); }
+      if ($('data').value.trim()) run(false); else { $('results').hidden = true; $('mapping').hidden = true; setMsg(''); }
+    });
+  });
+  $('score').addEventListener('click', function () { run(true); });
+  $('sample').addEventListener('click', function () { $('data').value = SAMPLE[state.mode].text(); state.sample = true; state.parsed = null; run(false); });
+  $('clear').addEventListener('click', function () {
+    $('data').value = ''; state.sample = false; state.parsed = null; state.last = null;
+    $('results').hidden = true; $('mapping').hidden = true; setMsg('');
+  });
+  $('data').addEventListener('input', function () { state.sample = false; });
+  $('tol').addEventListener('input', function () { if (state.last && state.mode === 'amounts') run(true); });
+  $('file').addEventListener('change', function (e) {
+    var f = e.target.files && e.target.files[0];
+    if (!f) return;
+    if (f.size > 5e6) { setMsg('That file is over 5 MB. Paste a smaller extract instead.', true); return; }
+    var rd = new FileReader();
+    rd.onload = function () { $('data').value = String(rd.result || ''); state.sample = false; state.parsed = null; run(false); e.target.value = ''; };
+    rd.onerror = function () { setMsg('I couldn’t read that file.', true); };
+    rd.readAsText(f);
+  });
+  $('copy').addEventListener('click', function () {
+    if (!state.last) return;
+    var text = state.last.findings.map(function (f) { return '• ' + f; }).join('\n');
+    var btn = $('copy');
+    var say = function (ok) {
+      btn.textContent = ok ? 'Copied' : 'Couldn’t copy. Select the text instead.';
+      setTimeout(function () { btn.textContent = 'Copy the findings'; }, 2000);
+    };
+    // Try the synchronous route first so the result is immediate; fall back to the async clipboard API.
+    if (fallbackCopy(text)) { say(true); return; }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { say(true); }, function () { say(false); });
+    else say(false);
+  });
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea'), ok = false, prev = document.activeElement;
+    ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'absolute'; ta.style.left = '-9999px';
+    document.body.appendChild(ta); ta.select();
+    try { ok = document.execCommand('copy'); } catch (err) { ok = false; }
+    document.body.removeChild(ta);
+    if (prev && prev.focus) prev.focus();
+    return ok;
+  }
+  var resizeTimer = null, lastW = 0;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      var w = $('charts').clientWidth;
+      if (state.last && !$('results').hidden && Math.abs(w - lastW) > 8) { lastW = w; renderCharts(state.last); }
+    }, 150);
+  });
+
+  setMode('amounts');
+})();
+</script>
+<script src="/site.js"></script>
+</body>
+</html>

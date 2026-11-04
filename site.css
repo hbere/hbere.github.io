@@ -150,3 +150,11 @@
   /* One item per line inside a labelled fact (the degrees on the hub). */
   .facts .lines > span { display: block; }
   .facts .lines > span + span { margin-top: 0.3rem; }
+  /* A door with a second link: the card's main link covers the card, and the
+     extra line sits above it so both stay clickable (no nested links). */
+  .door.has-also { position: relative; }
+  .door .door-link { color: inherit; text-decoration: none; }
+  .door .door-link::after { content: ""; position: absolute; inset: 0; }
+  .door .also { position: relative; z-index: 1; margin-top: 0.75rem; font-size: 0.9rem; }
+  .door .also a { color: var(--contour-dp); }
+  .door:focus-within { border-color: var(--contour-dp); }
